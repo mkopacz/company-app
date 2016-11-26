@@ -1,0 +1,60 @@
+<div>
+    <h2>Ingredients</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="ingredient.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span >
+                        Create new Ingredient
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr>
+                    <th><span>ID</span></th>
+                    <th><span>Amount</span></th>
+                    <th><span>Spice</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="ingredient in vm.ingredients track by ingredient.id">
+                    <td><a ui-sref="ingredient-detail({id:ingredient.id})">{{ingredient.id}}</a></td>
+                    <td>{{ingredient.amount}}</td>
+                    <td>
+                        <a ui-sref="spice-detail({id:ingredient.spiceId})">{{ingredient.spiceId}}</a>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="ingredient-detail({id:ingredient.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="ingredient.edit({id:ingredient.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="ingredient.delete({id:ingredient.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
