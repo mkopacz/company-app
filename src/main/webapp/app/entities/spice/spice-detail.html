@@ -1,14 +1,14 @@
 
 <div>
-    <h2><span>Spice</span> {{vm.spice.id}}</h2>
+    <h2><span>Przyprawa</span> {{vm.spice.id}}</h2>
     <hr>
     <jhi-alert-error></jhi-alert-error>
     <dl class="dl-horizontal jh-entity-details">
-        <dt><span>Name</span></dt>
+        <dt><span>Nazwa</span></dt>
         <dd>
             <span>{{vm.spice.name}}</span>
         </dd>
-        <dt><span>Producer</span></dt>
+        <dt><span>Producent</span></dt>
         <dd>
             <span>{{vm.spice.producer}}</span>
         </dd>
@@ -17,11 +17,11 @@
     <button type="submit"
             ui-sref="{{ vm.previousState }}"
             class="btn btn-info">
-        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Wstecz</span>
     </button>
 
     <button type="button" ui-sref="spice-detail.edit({id:vm.spice.id})" class="btn btn-primary">
         <span class="glyphicon glyphicon-pencil"></span>
-        <span class="hidden-xs hidden-sm"> Edit</span>
+        <span class="hidden-xs hidden-sm"> Edytuj</span>
     </button>
 </div>
