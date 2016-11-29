@@ -1,17 +1,10 @@
 package pl.kopacz.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
 
-/**
- * A Ingredient.
- */
 @Entity
 @Table(name = "ingredient")
 public class Ingredient implements Serializable {
@@ -26,14 +19,9 @@ public class Ingredient implements Serializable {
     @Column(name = "amount", nullable = false)
     private Double amount;
 
-    @OneToOne
     @NotNull
-    @JoinColumn(unique = true)
+    @OneToOne
     private Spice spice;
-
-    @ManyToMany(mappedBy = "ingredients")
-    @JsonIgnore
-    private Set<Product> products = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -69,31 +57,6 @@ public class Ingredient implements Serializable {
         this.spice = spice;
     }
 
-    public Set<Product> getProducts() {
-        return products;
-    }
-
-    public Ingredient products(Set<Product> products) {
-        this.products = products;
-        return this;
-    }
-
-    public Ingredient addProduct(Product product) {
-        products.add(product);
-        product.getIngredients().add(this);
-        return this;
-    }
-
-    public Ingredient removeProduct(Product product) {
-        products.remove(product);
-        product.getIngredients().remove(this);
-        return this;
-    }
-
-    public void setProducts(Set<Product> products) {
-        this.products = products;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -103,7 +66,7 @@ public class Ingredient implements Serializable {
             return false;
         }
         Ingredient ingredient = (Ingredient) o;
-        if(ingredient.id == null || id == null) {
+        if (ingredient.id == null || id == null) {
             return false;
         }
         return Objects.equals(id, ingredient.id);
@@ -121,4 +84,5 @@ public class Ingredient implements Serializable {
             ", amount='" + amount + "'" +
             '}';
     }
+
 }

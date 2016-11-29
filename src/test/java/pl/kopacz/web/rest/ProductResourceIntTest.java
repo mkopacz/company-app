@@ -4,6 +4,7 @@ import pl.kopacz.CompanyApp;
 
 import pl.kopacz.domain.Product;
 import pl.kopacz.domain.Ingredient;
+import pl.kopacz.domain.Spice;
 import pl.kopacz.repository.ProductRepository;
 import pl.kopacz.service.ProductService;
 import pl.kopacz.service.dto.ProductDTO;
@@ -43,6 +44,7 @@ public class ProductResourceIntTest {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
+    private static final Double DEFAULT_AMOUNT = 1D;
 
     @Inject
     private ProductRepository productRepository;
@@ -86,11 +88,26 @@ public class ProductResourceIntTest {
         Product product = new Product()
                 .name(DEFAULT_NAME);
         // Add required entity
-        Ingredient ingredient = IngredientResourceIntTest.createEntity(em);
-        em.persist(ingredient);
-        em.flush();
+        Ingredient ingredient = createIngredientEntity(em);
         product.getIngredients().add(ingredient);
         return product;
+    }
+
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static Ingredient createIngredientEntity(EntityManager em) {
+        Ingredient ingredient = new Ingredient()
+            .amount(DEFAULT_AMOUNT);
+        // Add required entity
+        Spice spice = SpiceResourceIntTest.createEntity(em);
+        em.persist(spice);
+        em.flush();
+        ingredient.setSpice(spice);
+        return ingredient;
     }
 
     @Before

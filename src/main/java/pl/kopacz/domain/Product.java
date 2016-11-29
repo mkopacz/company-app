@@ -2,15 +2,12 @@ package pl.kopacz.domain;
 
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
 
-/**
- * A Product.
- */
 @Entity
 @Table(name = "product")
 public class Product implements Serializable {
@@ -25,11 +22,12 @@ public class Product implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToMany
     @NotNull
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "product_ingredient",
-               joinColumns = @JoinColumn(name="products_id", referencedColumnName="ID"),
-               inverseJoinColumns = @JoinColumn(name="ingredients_id", referencedColumnName="ID"))
+        joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "ID"),
+        inverseJoinColumns = @JoinColumn(name = "ingredient_id", referencedColumnName = "ID")
+    )
     private Set<Ingredient> ingredients = new HashSet<>();
 
     public Long getId() {
@@ -64,13 +62,11 @@ public class Product implements Serializable {
 
     public Product addIngredient(Ingredient ingredient) {
         ingredients.add(ingredient);
-        ingredient.getProducts().add(this);
         return this;
     }
 
     public Product removeIngredient(Ingredient ingredient) {
         ingredients.remove(ingredient);
-        ingredient.getProducts().remove(this);
         return this;
     }
 
@@ -87,7 +83,7 @@ public class Product implements Serializable {
             return false;
         }
         Product product = (Product) o;
-        if(product.id == null || id == null) {
+        if (product.id == null || id == null) {
             return false;
         }
         return Objects.equals(id, product.id);
@@ -105,4 +101,5 @@ public class Product implements Serializable {
             ", name='" + name + "'" +
             '}';
     }
+
 }

@@ -1,14 +1,13 @@
 package pl.kopacz.service.mapper;
 
-import pl.kopacz.domain.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import pl.kopacz.domain.Ingredient;
+import pl.kopacz.domain.Spice;
 import pl.kopacz.service.dto.IngredientDTO;
 
-import org.mapstruct.*;
 import java.util.List;
 
-/**
- * Mapper for the entity Ingredient and its DTO IngredientDTO.
- */
 @Mapper(componentModel = "spring", uses = {})
 public interface IngredientMapper {
 
@@ -18,7 +17,6 @@ public interface IngredientMapper {
     List<IngredientDTO> ingredientsToIngredientDTOs(List<Ingredient> ingredients);
 
     @Mapping(source = "spiceId", target = "spice")
-    @Mapping(target = "products", ignore = true)
     Ingredient ingredientDTOToIngredient(IngredientDTO ingredientDTO);
 
     List<Ingredient> ingredientDTOsToIngredients(List<IngredientDTO> ingredientDTOs);
@@ -31,4 +29,5 @@ public interface IngredientMapper {
         spice.setId(id);
         return spice;
     }
+    
 }

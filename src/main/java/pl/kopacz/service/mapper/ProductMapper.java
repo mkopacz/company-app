@@ -1,15 +1,13 @@
 package pl.kopacz.service.mapper;
 
-import pl.kopacz.domain.*;
+import org.mapstruct.Mapper;
+import pl.kopacz.domain.Ingredient;
+import pl.kopacz.domain.Product;
 import pl.kopacz.service.dto.ProductDTO;
 
-import org.mapstruct.*;
 import java.util.List;
 
-/**
- * Mapper for the entity Product and its DTO ProductDTO.
- */
-@Mapper(componentModel = "spring", uses = {IngredientMapper.class, })
+@Mapper(componentModel = "spring", uses = {IngredientMapper.class})
 public interface ProductMapper {
 
     ProductDTO productToProductDTO(Product product);
@@ -28,4 +26,5 @@ public interface ProductMapper {
         ingredient.setId(id);
         return ingredient;
     }
+
 }

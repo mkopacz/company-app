@@ -1,15 +1,10 @@
 package pl.kopacz.service.dto;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
 
 
-/**
- * A DTO for the Ingredient entity.
- */
 public class IngredientDTO implements Serializable {
 
     private Long id;
@@ -17,9 +12,8 @@ public class IngredientDTO implements Serializable {
     @NotNull
     private Double amount;
 
-
     private Long spiceId;
-    
+
     public Long getId() {
         return id;
     }
@@ -27,6 +21,7 @@ public class IngredientDTO implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
     public Double getAmount() {
         return amount;
     }
@@ -54,7 +49,7 @@ public class IngredientDTO implements Serializable {
 
         IngredientDTO ingredientDTO = (IngredientDTO) o;
 
-        if ( ! Objects.equals(id, ingredientDTO.id)) return false;
+        if (!Objects.equals(id, ingredientDTO.id)) return false;
 
         return true;
     }
@@ -71,4 +66,5 @@ public class IngredientDTO implements Serializable {
             ", amount='" + amount + "'" +
             '}';
     }
+
 }
