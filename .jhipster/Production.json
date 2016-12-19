@@ -1,0 +1,25 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "productionItem",
+            "otherEntityName": "productionItem",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "production"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "datetime",
+            "fieldType": "ZonedDateTime",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20161219210121",
+    "dto": "mapstruct",
+    "service": "serviceClass",
+    "entityTableName": "production",
+    "pagination": "no"
+}

@@ -1,0 +1,64 @@
+<div>
+    <h2>Production Items</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="production-item.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span >
+                        Create new Production Item
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr>
+                    <th><span>ID</span></th>
+                    <th><span>Amount</span></th>
+                    <th><span>Product</span></th>
+                    <th><span>Production</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="productionItem in vm.productionItems track by productionItem.id">
+                    <td><a ui-sref="production-item-detail({id:productionItem.id})">{{productionItem.id}}</a></td>
+                    <td>{{productionItem.amount}}</td>
+                    <td>
+                        <a ui-sref="product-detail({id:productionItem.productId})">{{productionItem.productId}}</a>
+                    </td>
+                    <td>
+                        <a ui-sref="production-detail({id:productionItem.productionId})">{{productionItem.productionId}}</a>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="production-item-detail({id:productionItem.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="production-item.edit({id:productionItem.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="production-item.delete({id:productionItem.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
