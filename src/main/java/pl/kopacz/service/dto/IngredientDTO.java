@@ -2,7 +2,6 @@ package pl.kopacz.service.dto;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Objects;
 
 
 public class IngredientDTO implements Serializable {
@@ -36,27 +35,6 @@ public class IngredientDTO implements Serializable {
 
     public void setSpiceId(Long spiceId) {
         this.spiceId = spiceId;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        IngredientDTO ingredientDTO = (IngredientDTO) o;
-
-        if (!Objects.equals(id, ingredientDTO.id)) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
     }
 
     @Override

@@ -96,7 +96,11 @@
                         entity: function () {
                             return {
                                 name: null,
-                                id: null
+                                id: null,
+                                ingredients: [{
+                                    amount: null,
+                                    id: null
+                                }]
                             };
                         }
                     }

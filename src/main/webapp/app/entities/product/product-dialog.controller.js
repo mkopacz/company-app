@@ -5,19 +5,33 @@
         .module('companyApp')
         .controller('ProductDialogController', ProductDialogController);
 
-    ProductDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Product', 'Ingredient'];
+    ProductDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Product', 'Spice'];
 
-    function ProductDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Product, Ingredient) {
+    function ProductDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Product, Spice) {
         var vm = this;
 
         vm.product = entity;
         vm.clear = clear;
         vm.save = save;
-        vm.ingredients = Ingredient.query();
+
+        vm.spices = Spice.query();
+        vm.addIngredient = addIngredient;
+        vm.removeIngredient = removeIngredient;
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();
         });
+
+        function addIngredient(index) {
+            vm.product.ingredients.splice(index + 1, 0, {
+                amount: null,
+                id: null
+            });
+        }
+
+        function removeIngredient(index) {
+            vm.product.ingredients.splice(index, 1);
+        }
 
         function clear () {
             $uibModalInstance.dismiss('cancel');
