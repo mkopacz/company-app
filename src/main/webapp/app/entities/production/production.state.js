@@ -96,7 +96,11 @@
                         entity: function () {
                             return {
                                 datetime: null,
-                                id: null
+                                id: null,
+                                productionItems: [{
+                                    amount: null,
+                                    id: null
+                                }]
                             };
                         }
                     }

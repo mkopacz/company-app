@@ -1,18 +1,13 @@
 package pl.kopacz.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
 
-/**
- * A Production.
- */
 @Entity
 @Table(name = "production")
 public class Production implements Serializable {
@@ -27,8 +22,8 @@ public class Production implements Serializable {
     @Column(name = "datetime", nullable = false)
     private ZonedDateTime datetime;
 
-    @OneToMany(mappedBy = "production")
-    @JsonIgnore
+    @NotNull
+    @OneToMany(mappedBy = "production", cascade = CascadeType.ALL)
     private Set<ProductionItem> productionItems = new HashSet<>();
 
     public Long getId() {
@@ -74,7 +69,7 @@ public class Production implements Serializable {
     }
 
     public void setProductionItems(Set<ProductionItem> productionItems) {
-        this.productionItems = productionItems;
+        productionItems.forEach(this::addProductionItem);
     }
 
     @Override
@@ -104,4 +99,5 @@ public class Production implements Serializable {
             ", datetime='" + datetime + "'" +
             '}';
     }
+
 }

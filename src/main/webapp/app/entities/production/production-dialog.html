@@ -4,7 +4,7 @@
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
                 ng-click="vm.clear()">&times;</button>
-        <h4 class="modal-title" id="myProductionLabel">Create or edit a Production</h4>
+        <h4 class="modal-title" id="myProductionLabel">Dodanie lub edycja produkcji</h4>
     </div>
     <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
@@ -13,34 +13,89 @@
             <input type="text" class="form-control" id="id" name="id"
                     ng-model="vm.production.id" readonly />
         </div>
+
         <div class="form-group">
-            <label class="control-label" for="field_datetime">Datetime</label>
-                <div class="input-group">
-                    <input id="field_datetime" type="text" class="form-control" name="datetime" datetime-picker="{{dateformat}}" ng-model="vm.production.datetime" is-open="vm.datePickerOpenStatus.datetime"
-                    required  />
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('datetime')"><i class="glyphicon glyphicon-calendar"></i></button>
-                    </span>
-                </div>
+            <label class="control-label" for="field_datetime">Data</label>
+            <div class="input-group">
+                <input id="field_datetime" type="text" class="form-control" name="datetime" datetime-picker="{{dateformat}}"
+                       ng-model="vm.production.datetime" is-open="vm.datePickerOpenStatus.datetime" required  />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="vm.openCalendar('datetime')">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                    </button>
+                </span>
+            </div>
             <div ng-show="editForm.datetime.$invalid">
                 <p class="help-block"
                     ng-show="editForm.datetime.$error.required">
-                    This field is required.
+                    To pole jest wymagane.
                 </p>
                 <p class="help-block"
                     ng-show="editForm.datetime.$error.ZonedDateTimelocal">
-                    This field should be a date and time.
+                    To pole powinno zawierać datę.
                 </p>
             </div>
         </div>
 
+        <div ng-repeat="productionItem in vm.production.productionItems">
+            <div class="row">
+                <div class="col-xs-3">
+                    <div class="form-group">
+                        <label class="control-label" for="field_amount">Ilość</label>
+                        <input type="number" class="form-control" name="amount_{{$index}}" id="field_amount"
+                               ng-model="productionItem.amount" required />
+                        <div ng-show="editForm['amount_' + $index].$invalid">
+                            <p class="help-block"
+                               ng-show="editForm['amount_' + $index].$error.required">
+                                To pole jest wymagane
+                            </p>
+                            <p class="help-block"
+                               ng-show="editForm['amount_' + $index].$error.number">
+                                To pole powinno być liczbą.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-7">
+                    <div class="form-group">
+                        <label for="field_product">Produkt</label>
+                        <select class="form-control" id="field_product" name="product_{{$index}}" ng-model="productionItem.productId"
+                                ng-options="product.id as product.name for product in vm.products | orderBy:'id'" required>
+                            <option value=""></option>
+                        </select>
+                        <div ng-show="editForm['product_' + $index].$invalid">
+                            <p class="help-block"
+                               ng-show="editForm['product_' + $index].$error.required">
+                                To pole jest wymagane.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-2">
+                    <div class="form-group">
+                        <label>Akcje</label>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-danger" ng-click="vm.removeProductionItem($index)"
+                                    ng-disabled="vm.production.productionItems.length <= 1">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                            </button>
+                            <button type="button" class="btn btn-primary" ng-click="vm.addProductionItem($index)">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
-            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Anuluj</span>
         </button>
         <button type="submit" ng-disabled="editForm.$invalid || vm.isSaving" class="btn btn-primary">
-            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Zapisz</span>
         </button>
     </div>
 </form>

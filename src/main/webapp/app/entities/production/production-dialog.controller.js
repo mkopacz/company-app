@@ -5,21 +5,36 @@
         .module('companyApp')
         .controller('ProductionDialogController', ProductionDialogController);
 
-    ProductionDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Production', 'ProductionItem'];
+    ProductionDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Production', 'Product'];
 
-    function ProductionDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Production, ProductionItem) {
+    function ProductionDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Production, Product) {
         var vm = this;
 
         vm.production = entity;
         vm.clear = clear;
+        vm.save = save;
+
         vm.datePickerOpenStatus = {};
         vm.openCalendar = openCalendar;
-        vm.save = save;
-        vm.productionitems = ProductionItem.query();
+
+        vm.products = Product.query();
+        vm.addProductionItem = addProductionItem;
+        vm.removeProductionItem = removeProductionItem;
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();
         });
+
+        function addProductionItem(index) {
+            vm.production.productionItems.splice(index + 1, 0, {
+                amount: null,
+                id: null
+            });
+        }
+
+        function removeProductionItem(index) {
+            vm.production.productionItems.splice(index, 1);
+        }
 
         function clear () {
             $uibModalInstance.dismiss('cancel');

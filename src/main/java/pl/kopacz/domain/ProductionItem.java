@@ -1,14 +1,10 @@
 package pl.kopacz.domain;
 
-
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
-/**
- * A ProductionItem.
- */
 @Entity
 @Table(name = "production_item")
 public class ProductionItem implements Serializable {
@@ -23,13 +19,12 @@ public class ProductionItem implements Serializable {
     @Column(name = "amount", nullable = false)
     private Double amount;
 
-    @OneToOne
     @NotNull
-    @JoinColumn(unique = true)
+    @OneToOne
     private Product product;
 
-    @ManyToOne
     @NotNull
+    @ManyToOne
     private Production production;
 
     public Long getId() {
@@ -106,4 +101,5 @@ public class ProductionItem implements Serializable {
             ", amount='" + amount + "'" +
             '}';
     }
+
 }

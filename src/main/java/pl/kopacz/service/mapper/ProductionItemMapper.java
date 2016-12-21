@@ -1,14 +1,14 @@
 package pl.kopacz.service.mapper;
 
-import pl.kopacz.domain.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import pl.kopacz.domain.Product;
+import pl.kopacz.domain.Production;
+import pl.kopacz.domain.ProductionItem;
 import pl.kopacz.service.dto.ProductionItemDTO;
 
-import org.mapstruct.*;
 import java.util.List;
 
-/**
- * Mapper for the entity ProductionItem and its DTO ProductionItemDTO.
- */
 @Mapper(componentModel = "spring", uses = {})
 public interface ProductionItemMapper {
 
@@ -41,4 +41,5 @@ public interface ProductionItemMapper {
         production.setId(id);
         return production;
     }
+
 }

@@ -1,15 +1,8 @@
 package pl.kopacz.service.dto;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Objects;
 
-
-/**
- * A DTO for the ProductionItem entity.
- */
 public class ProductionItemDTO implements Serializable {
 
     private Long id;
@@ -17,11 +10,10 @@ public class ProductionItemDTO implements Serializable {
     @NotNull
     private Double amount;
 
-
     private Long productId;
-    
+
     private Long productionId;
-    
+
     public Long getId() {
         return id;
     }
@@ -29,6 +21,7 @@ public class ProductionItemDTO implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
     public Double getAmount() {
         return amount;
     }
@@ -54,31 +47,11 @@ public class ProductionItemDTO implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        ProductionItemDTO productionItemDTO = (ProductionItemDTO) o;
-
-        if ( ! Objects.equals(id, productionItemDTO.id)) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
-    @Override
     public String toString() {
         return "ProductionItemDTO{" +
             "id=" + id +
             ", amount='" + amount + "'" +
             '}';
     }
+
 }
