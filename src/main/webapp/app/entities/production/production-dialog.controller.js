@@ -5,9 +5,9 @@
         .module('companyApp')
         .controller('ProductionDialogController', ProductionDialogController);
 
-    ProductionDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Production', 'Product'];
+    ProductionDialogController.$inject = ['$timeout', '$scope', '$uibModalInstance', 'entity', 'Production', 'Product'];
 
-    function ProductionDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Production, Product) {
+    function ProductionDialogController ($timeout, $scope, $uibModalInstance, entity, Production, Product) {
         var vm = this;
 
         vm.production = entity;

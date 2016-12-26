@@ -5,9 +5,9 @@
         .module('companyApp')
         .controller('ProductionDetailController', ProductionDetailController);
 
-    ProductionDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Production', 'ProductionItem'];
+    ProductionDetailController.$inject = ['$scope', '$rootScope', 'previousState', 'entity'];
 
-    function ProductionDetailController($scope, $rootScope, $stateParams, previousState, entity, Production, ProductionItem) {
+    function ProductionDetailController($scope, $rootScope, previousState, entity) {
         var vm = this;
 
         vm.production = entity;

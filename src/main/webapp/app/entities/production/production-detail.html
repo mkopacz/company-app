@@ -1,23 +1,30 @@
 
 <div>
-    <h2><span>Production</span> {{vm.production.id}}</h2>
+    <h2><span>Produkcja</span> {{vm.production.id}}</h2>
     <hr>
     <jhi-alert-error></jhi-alert-error>
     <dl class="dl-horizontal jh-entity-details">
-        <dt><span>Datetime</span></dt>
+        <dt><span>Data</span></dt>
         <dd>
-            <span>{{vm.production.datetime | date:'medium'}}</span>
+            <span>{{vm.production.datetime | date:'shortDate'}}</span>
+        </dd>
+        <dt><span>Produkty</span></dt>
+        <dd>
+            <div style="display: table-row" ng-repeat="productionItem in vm.production.productionItems">
+                <div style="display: table-cell; padding-right: 20px">{{productionItem.amount}} kg</div>
+                <div style="display: table-cell">{{productionItem.product.name}}</div>
+            </div>
         </dd>
     </dl>
 
     <button type="submit"
             ui-sref="{{ vm.previousState }}"
             class="btn btn-info">
-        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Wstecz</span>
     </button>
 
     <button type="button" ui-sref="production-detail.edit({id:vm.production.id})" class="btn btn-primary">
         <span class="glyphicon glyphicon-pencil"></span>
-        <span class="hidden-xs hidden-sm"> Edit</span>
+        <span class="hidden-xs hidden-sm"> Edytuj</span>
     </button>
 </div>
