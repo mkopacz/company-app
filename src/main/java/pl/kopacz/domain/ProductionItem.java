@@ -83,7 +83,7 @@ public class ProductionItem implements Serializable {
             return false;
         }
         ProductionItem productionItem = (ProductionItem) o;
-        if(productionItem.id == null || id == null) {
+        if (productionItem.id == null || id == null) {
             return false;
         }
         return Objects.equals(id, productionItem.id);

@@ -51,7 +51,7 @@ public class ProductionDTO implements Serializable {
 
         ProductionDTO productionDTO = (ProductionDTO) o;
 
-        if ( ! Objects.equals(id, productionDTO.id)) return false;
+        if (!Objects.equals(id, productionDTO.id)) return false;
 
         return true;
     }

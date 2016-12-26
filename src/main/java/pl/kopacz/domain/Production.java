@@ -23,7 +23,7 @@ public class Production implements Serializable {
     private ZonedDateTime datetime;
 
     @NotNull
-    @OneToMany(mappedBy = "production", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "production", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductionItem> productionItems = new HashSet<>();
 
     public Long getId() {
@@ -81,7 +81,7 @@ public class Production implements Serializable {
             return false;
         }
         Production production = (Production) o;
-        if(production.id == null || id == null) {
+        if (production.id == null || id == null) {
             return false;
         }
         return Objects.equals(id, production.id);

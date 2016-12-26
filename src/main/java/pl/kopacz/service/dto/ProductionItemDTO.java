@@ -10,7 +10,7 @@ public class ProductionItemDTO implements Serializable {
     @NotNull
     private Double amount;
 
-    private Long productId;
+    private ProductDTO product;
 
     private Long productionId;
 
@@ -30,12 +30,12 @@ public class ProductionItemDTO implements Serializable {
         this.amount = amount;
     }
 
-    public Long getProductId() {
-        return productId;
+    public ProductDTO getProduct() {
+        return product;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setProduct(ProductDTO product) {
+        this.product = product;
     }
 
     public Long getProductionId() {

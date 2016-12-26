@@ -2,7 +2,6 @@ package pl.kopacz.service.mapper;
 
 import org.mapstruct.Mapper;
 import pl.kopacz.domain.Production;
-import pl.kopacz.domain.ProductionItem;
 import pl.kopacz.service.dto.ProductionDTO;
 
 import java.util.List;
@@ -17,14 +16,5 @@ public interface ProductionMapper {
     Production productionDTOToProduction(ProductionDTO productionDTO);
 
     List<Production> productionDTOsToProductions(List<ProductionDTO> productionDTOs);
-
-    default ProductionItem productionItemFromId(Long id) {
-        if (id == null) {
-            return null;
-        }
-        ProductionItem productionItem = new ProductionItem();
-        productionItem.setId(id);
-        return productionItem;
-    }
 
 }
