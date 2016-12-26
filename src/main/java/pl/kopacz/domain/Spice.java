@@ -1,14 +1,10 @@
 package pl.kopacz.domain;
 
-
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
-/**
- * A Spice.
- */
 @Entity
 @Table(name = "spice")
 public class Spice implements Serializable {
@@ -70,7 +66,7 @@ public class Spice implements Serializable {
             return false;
         }
         Spice spice = (Spice) o;
-        if(spice.id == null || id == null) {
+        if (spice.id == null || id == null) {
             return false;
         }
         return Objects.equals(id, spice.id);
@@ -89,4 +85,5 @@ public class Spice implements Serializable {
             ", producer='" + producer + "'" +
             '}';
     }
+
 }

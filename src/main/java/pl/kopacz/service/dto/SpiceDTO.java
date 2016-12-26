@@ -1,13 +1,9 @@
 package pl.kopacz.service.dto;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
-
-/**
- * A DTO for the Spice entity.
- */
 public class SpiceDTO implements Serializable {
 
     private Long id;
@@ -18,7 +14,6 @@ public class SpiceDTO implements Serializable {
     @NotNull
     private String producer;
 
-
     public Long getId() {
         return id;
     }
@@ -26,6 +21,7 @@ public class SpiceDTO implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
     public String getName() {
         return name;
     }
@@ -33,6 +29,7 @@ public class SpiceDTO implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
     public String getProducer() {
         return producer;
     }
@@ -52,7 +49,7 @@ public class SpiceDTO implements Serializable {
 
         SpiceDTO spiceDTO = (SpiceDTO) o;
 
-        if ( ! Objects.equals(id, spiceDTO.id)) return false;
+        if (!Objects.equals(id, spiceDTO.id)) return false;
 
         return true;
     }
@@ -70,4 +67,5 @@ public class SpiceDTO implements Serializable {
             ", producer='" + producer + "'" +
             '}';
     }
+
 }

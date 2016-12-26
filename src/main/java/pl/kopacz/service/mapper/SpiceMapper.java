@@ -1,14 +1,11 @@
 package pl.kopacz.service.mapper;
 
-import pl.kopacz.domain.*;
+import org.mapstruct.Mapper;
+import pl.kopacz.domain.Spice;
 import pl.kopacz.service.dto.SpiceDTO;
 
-import org.mapstruct.*;
 import java.util.List;
 
-/**
- * Mapper for the entity Spice and its DTO SpiceDTO.
- */
 @Mapper(componentModel = "spring", uses = {})
 public interface SpiceMapper {
 
@@ -19,4 +16,5 @@ public interface SpiceMapper {
     Spice spiceDTOToSpice(SpiceDTO spiceDTO);
 
     List<Spice> spiceDTOsToSpices(List<SpiceDTO> spiceDTOs);
+
 }

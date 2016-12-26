@@ -3,7 +3,6 @@ package pl.kopacz.service.dto;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-
 public class IngredientDTO implements Serializable {
 
     private Long id;
@@ -11,7 +10,7 @@ public class IngredientDTO implements Serializable {
     @NotNull
     private Double amount;
 
-    private Long spiceId;
+    private SpiceDTO spice;
 
     public Long getId() {
         return id;
@@ -29,12 +28,12 @@ public class IngredientDTO implements Serializable {
         this.amount = amount;
     }
 
-    public Long getSpiceId() {
-        return spiceId;
+    public SpiceDTO getSpice() {
+        return spice;
     }
 
-    public void setSpiceId(Long spiceId) {
-        this.spiceId = spiceId;
+    public void setSpice(SpiceDTO spice) {
+        this.spice = spice;
     }
 
     @Override

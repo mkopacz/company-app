@@ -1,6 +1,5 @@
 package pl.kopacz.domain;
 
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -23,7 +22,7 @@ public class Product implements Serializable {
     private String name;
 
     @NotNull
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "product_ingredient",
         joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "ID"),
         inverseJoinColumns = @JoinColumn(name = "ingredient_id", referencedColumnName = "ID")
