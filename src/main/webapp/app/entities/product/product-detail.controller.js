@@ -5,9 +5,9 @@
         .module('companyApp')
         .controller('ProductDetailController', ProductDetailController);
 
-    ProductDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Product', 'Ingredient'];
+    ProductDetailController.$inject = ['$scope', '$rootScope', 'previousState', 'entity'];
 
-    function ProductDetailController($scope, $rootScope, $stateParams, previousState, entity, Product, Ingredient) {
+    function ProductDetailController($scope, $rootScope, previousState, entity) {
         var vm = this;
 
         vm.product = entity;

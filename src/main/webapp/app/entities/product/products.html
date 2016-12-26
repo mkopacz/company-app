@@ -1,5 +1,5 @@
 <div>
-    <h2>Products</h2>
+    <h2>Produkty</h2>
     <jhi-alert></jhi-alert>
     <div class="container-fluid">
         <div class="row">
@@ -7,7 +7,7 @@
                 <button class="btn btn-primary" ui-sref="product.new" >
                     <span class="glyphicon glyphicon-plus"></span>
                     <span >
-                        Create new Product
+                        Nowy produkt
                     </span>
                 </button>
             </div>
@@ -19,8 +19,8 @@
             <thead>
                 <tr>
                     <th><span>ID</span></th>
-                    <th><span>Name</span></th>
-                    <th><span>Ingredient</span></th>
+                    <th><span>Nazwa</span></th>
+                    <th><span>Składniki</span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -29,9 +29,12 @@
                     <td><a ui-sref="product-detail({id:product.id})">{{product.id}}</a></td>
                     <td>{{product.name}}</td>
                     <td>
-                        <span ng-repeat="ingredient in product.ingredients">
-                            <a class="form-control-static" ui-sref="ingredient-detail({id: ingredient.id})">{{ingredient.id}}</a>{{$last ? '' : ', '}}
-                        </span>
+                        <div class="container-fluid">
+                            <div class="row" ng-repeat="ingredient in product.ingredients">
+                                <div class="col-xs-3 no-padding">{{ingredient.amount}} kg</div>
+                                <div class="col-xs-9 no-padding">{{ingredient.spice.name}}</div>
+                            </div>
+                        </div>
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">

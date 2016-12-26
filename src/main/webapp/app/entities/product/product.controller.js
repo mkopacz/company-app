@@ -5,9 +5,9 @@
         .module('companyApp')
         .controller('ProductController', ProductController);
 
-    ProductController.$inject = ['$scope', '$state', 'Product'];
+    ProductController.$inject = ['Product'];
 
-    function ProductController ($scope, $state, Product) {
+    function ProductController (Product) {
         var vm = this;
 
         vm.products = [];
