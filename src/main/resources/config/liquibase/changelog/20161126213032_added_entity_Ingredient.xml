@@ -25,7 +25,7 @@
                 <constraints nullable="false" />
             </column>
                         <column name="spice_id" type="bigint">
-                <constraints unique="true" nullable="false" />
+                <constraints unique="true" uniqueConstraintName="ingredient_spice_id_key" nullable="false" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - Jhipster will add columns here, do not remove-->
         </createTable>

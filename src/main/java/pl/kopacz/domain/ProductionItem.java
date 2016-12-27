@@ -20,7 +20,7 @@ public class ProductionItem implements Serializable {
     private Double amount;
 
     @NotNull
-    @OneToOne
+    @ManyToOne
     private Product product;
 
     @NotNull

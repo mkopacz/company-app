@@ -20,7 +20,7 @@ public class Ingredient implements Serializable {
     private Double amount;
 
     @NotNull
-    @OneToOne
+    @ManyToOne
     private Spice spice;
 
     public Long getId() {
