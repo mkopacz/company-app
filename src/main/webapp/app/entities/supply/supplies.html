@@ -1,5 +1,5 @@
 <div>
-    <h2>Supplies</h2>
+    <h2>Zasoby</h2>
     <jhi-alert></jhi-alert>
     <div class="container-fluid">
         <div class="row">
@@ -7,7 +7,7 @@
                 <button class="btn btn-primary" ui-sref="supply.new" >
                     <span class="glyphicon glyphicon-plus"></span>
                     <span >
-                        Create new Supply
+                        Nowy zasób
                     </span>
                 </button>
             </div>
@@ -19,10 +19,10 @@
             <thead>
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
                     <th jh-sort-by="id"><span>ID</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="serialNumber"><span>Serial Number</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="expirationDate"><span>Expiration Date</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="amount"><span>Amount</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="spiceId"><span>Spice</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="serialNumber"><span>Numer partii</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="expirationDate"><span>Data ważności</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="amount"><span>Ilość</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="spiceId"><span>Przyprawa</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
