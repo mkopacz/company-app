@@ -60,7 +60,8 @@
 
         <div class="form-group">
             <label for="field_spice">Przyprawa</label>
-            <select class="form-control" id="field_spice" name="spice" ng-model="vm.supply.spiceId" ng-options="spice.id as spice.id for spice in vm.spices"             required>
+            <select class="form-control" id="field_spice" name="spice" ng-model="vm.supply.spice.id"
+                    ng-options="spice.id as spice.name for spice in vm.spices" required>
                 <option value=""></option>
             </select>
         </div>

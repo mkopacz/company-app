@@ -1,16 +1,10 @@
 package pl.kopacz.service.dto;
 
-import java.time.LocalDate;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDate;
 import java.util.Objects;
 
-
-/**
- * A DTO for the Supply entity.
- */
 public class SupplyDTO implements Serializable {
 
     private Long id;
@@ -24,9 +18,8 @@ public class SupplyDTO implements Serializable {
     @NotNull
     private Double amount;
 
+    private SpiceDTO spice;
 
-    private Long spiceId;
-    
     public Long getId() {
         return id;
     }
@@ -34,6 +27,7 @@ public class SupplyDTO implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
     public String getSerialNumber() {
         return serialNumber;
     }
@@ -41,6 +35,7 @@ public class SupplyDTO implements Serializable {
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
     }
+
     public LocalDate getExpirationDate() {
         return expirationDate;
     }
@@ -48,6 +43,7 @@ public class SupplyDTO implements Serializable {
     public void setExpirationDate(LocalDate expirationDate) {
         this.expirationDate = expirationDate;
     }
+
     public Double getAmount() {
         return amount;
     }
@@ -56,12 +52,12 @@ public class SupplyDTO implements Serializable {
         this.amount = amount;
     }
 
-    public Long getSpiceId() {
-        return spiceId;
+    public SpiceDTO getSpice() {
+        return spice;
     }
 
-    public void setSpiceId(Long spiceId) {
-        this.spiceId = spiceId;
+    public void setSpice(SpiceDTO spice) {
+        this.spice = spice;
     }
 
     @Override
@@ -75,7 +71,7 @@ public class SupplyDTO implements Serializable {
 
         SupplyDTO supplyDTO = (SupplyDTO) o;
 
-        if ( ! Objects.equals(id, supplyDTO.id)) return false;
+        if (!Objects.equals(id, supplyDTO.id)) return false;
 
         return true;
     }
@@ -94,4 +90,5 @@ public class SupplyDTO implements Serializable {
             ", amount='" + amount + "'" +
             '}';
     }
+
 }

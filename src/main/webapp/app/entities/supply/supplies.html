@@ -30,11 +30,9 @@
                 <tr ng-repeat="supply in vm.supplies track by supply.id">
                     <td><a ui-sref="supply-detail({id:supply.id})">{{supply.id}}</a></td>
                     <td>{{supply.serialNumber}}</td>
-                        <td>{{supply.expirationDate | date:'mediumDate'}}</td>
+                    <td>{{supply.expirationDate | date:'mediumDate'}}</td>
                     <td>{{supply.amount}}</td>
-                    <td>
-                        <a ui-sref="spice-detail({id:supply.spiceId})">{{supply.spiceId}}</a>
-                    </td>
+                    <td>{{supply.spice.name}}</td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"

@@ -1,15 +1,11 @@
 package pl.kopacz.domain;
 
-
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-/**
- * A Supply.
- */
 @Entity
 @Table(name = "supply")
 public class Supply implements Serializable {
@@ -32,8 +28,8 @@ public class Supply implements Serializable {
     @Column(name = "amount", nullable = false)
     private Double amount;
 
-    @ManyToOne
     @NotNull
+    @ManyToOne
     private Spice spice;
 
     public Long getId() {
@@ -105,7 +101,7 @@ public class Supply implements Serializable {
             return false;
         }
         Supply supply = (Supply) o;
-        if(supply.id == null || id == null) {
+        if (supply.id == null || id == null) {
             return false;
         }
         return Objects.equals(id, supply.id);
@@ -125,4 +121,5 @@ public class Supply implements Serializable {
             ", amount='" + amount + "'" +
             '}';
     }
+
 }
