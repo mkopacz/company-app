@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "production_item")
@@ -72,6 +73,10 @@ public class ProductionItem implements Serializable {
 
     public void setProduction(Production production) {
         this.production = production;
+    }
+
+    public Set<Ingredient> getIngredients() {
+        return product.getIngredients();
     }
 
     @Override

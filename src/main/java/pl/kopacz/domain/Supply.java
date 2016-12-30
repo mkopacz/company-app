@@ -92,6 +92,10 @@ public class Supply implements Serializable {
         this.spice = spice;
     }
 
+    public void lowerAmount(Double amount) {
+        this.amount -= amount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

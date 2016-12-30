@@ -1,15 +1,10 @@
 package pl.kopacz.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import pl.kopacz.domain.Production;
+import pl.kopacz.repository.custom.ProductionRepositoryCustom;
 
-import org.springframework.data.jpa.repository.*;
-
-import java.util.List;
-
-/**
- * Spring Data JPA repository for the Production entity.
- */
 @SuppressWarnings("unused")
-public interface ProductionRepository extends JpaRepository<Production,Long> {
+public interface ProductionRepository extends JpaRepository<Production, Long>, ProductionRepositoryCustom {
 
 }

@@ -1,15 +1,14 @@
 package pl.kopacz.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import pl.kopacz.domain.Spice;
 import pl.kopacz.domain.Supply;
-
-import org.springframework.data.jpa.repository.*;
 
 import java.util.List;
 
-/**
- * Spring Data JPA repository for the Supply entity.
- */
 @SuppressWarnings("unused")
-public interface SupplyRepository extends JpaRepository<Supply,Long> {
+public interface SupplyRepository extends JpaRepository<Supply, Long> {
+
+    List<Supply> findBySpiceOrderByIdAsc(Spice spice);
 
 }
