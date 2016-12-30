@@ -26,6 +26,10 @@ public class Production implements Serializable {
     @OneToMany(mappedBy = "production", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductionItem> productionItems = new HashSet<>();
 
+    @NotNull
+    @OneToMany(mappedBy = "production", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<SupplyUsage> supplyUsages = new HashSet<>();
+
     public Long getId() {
         return id;
     }
@@ -70,6 +74,31 @@ public class Production implements Serializable {
 
     public void setProductionItems(Set<ProductionItem> productionItems) {
         productionItems.forEach(this::addProductionItem);
+    }
+
+    public Set<SupplyUsage> getSupplyUsages() {
+        return supplyUsages;
+    }
+
+    public Production supplyUsages(Set<SupplyUsage> supplyUsages) {
+        this.supplyUsages = supplyUsages;
+        return this;
+    }
+
+    public Production addSupplyUsage(SupplyUsage supplyUsage) {
+        supplyUsages.add(supplyUsage);
+        supplyUsage.setProduction(this);
+        return this;
+    }
+
+    public Production removeSupplyUsage(SupplyUsage supplyUsage) {
+        supplyUsages.remove(supplyUsage);
+        supplyUsage.setProduction(null);
+        return this;
+    }
+
+    public void setSupplyUsages(Set<SupplyUsage> supplyUsages) {
+        supplyUsages.forEach(this::addSupplyUsage);
     }
 
     @Override

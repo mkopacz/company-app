@@ -9,12 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.kopacz.domain.Production;
 import pl.kopacz.domain.Spice;
 import pl.kopacz.domain.Supply;
+import pl.kopacz.domain.SupplyUsage;
 import pl.kopacz.repository.SupplyRepository;
 import pl.kopacz.service.dto.SupplyDTO;
 import pl.kopacz.service.mapper.SupplyMapper;
 
 import javax.inject.Inject;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -56,25 +59,39 @@ public class SupplyService {
         supplyRepository.delete(id);
     }
 
-    public void useSupplies(Production production) {
+    public Set<SupplyUsage> useSupplies(Production production) {
         log.debug("Request to use Supplies : {}", production);
+        Set<SupplyUsage> totalSupplyUsages = new HashSet<>();
+
         production.getProductionItems().forEach(productionItem -> {
             Double productAmount = productionItem.getAmount();
             productionItem.getIngredients().forEach(ingredient -> {
                 Double spiceAmount = ingredient.getAmount() * productAmount / 100;
-                useSupply(ingredient.getSpice(), spiceAmount);
+                Set<SupplyUsage> supplyUsages = useSupply(ingredient.getSpice(), spiceAmount);
+                totalSupplyUsages.addAll(supplyUsages);
             });
         });
+
+        return totalSupplyUsages;
     }
 
-    private void useSupply(Spice spice, double amount) {
+    private Set<SupplyUsage> useSupply(Spice spice, double amount) {
+        Set<SupplyUsage> supplyUsages = new HashSet<>();
         List<Supply> supplies = supplyRepository.findBySpiceOrderByIdAsc(spice);
+
         while (amount > 0) {
             Supply supply = supplies.remove(0);
             double amountToUse = Math.min(supply.getAmount(), amount);
+
+            SupplyUsage supplyUsage = new SupplyUsage();
+            supplyUsage.amount(amountToUse).supply(supply);
+            supplyUsages.add(supplyUsage);
+
             supply.lowerAmount(amountToUse);
             amount -= amountToUse;
         }
+
+        return supplyUsages;
     }
 
 }

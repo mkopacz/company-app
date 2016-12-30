@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="mariusz-macbook (generated)" id="1483112438037-1">
+        <createTable tableName="supply_usage">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="supply_usagePK"/>
+            </column>
+            <column name="amount" type="FLOAT8">
+                <constraints nullable="false"/>
+            </column>
+            <column name="production_id" type="BIGINT"/>
+            <column name="supply_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="mariusz-macbook (generated)" id="1483112438037-2">
+        <addForeignKeyConstraint baseColumnNames="supply_id" baseTableName="supply_usage" constraintName="FK_6tcyowsmdlud4bv3ahxrvg8kh" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="supply"/>
+    </changeSet>
+    <changeSet author="mariusz-macbook (generated)" id="1483112438037-3">
+        <addForeignKeyConstraint baseColumnNames="production_id" baseTableName="supply_usage" constraintName="FK_b38441wnqkkheob2khdcmbrek" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="production"/>
+    </changeSet>
+</databaseChangeLog>

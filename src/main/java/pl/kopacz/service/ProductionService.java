@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kopacz.domain.Production;
+import pl.kopacz.domain.SupplyUsage;
 import pl.kopacz.repository.ProductionRepository;
 import pl.kopacz.service.dto.ProductionDTO;
 import pl.kopacz.service.mapper.ProductionMapper;
@@ -12,6 +13,7 @@ import pl.kopacz.service.mapper.ProductionMapper;
 import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +36,8 @@ public class ProductionService {
         Production production = productionMapper.productionDTOToProduction(productionDTO);
         if (production.getId() == null) {
             productionRepository.loadProducts(production);
-            supplyService.useSupplies(production);
+            Set<SupplyUsage> supplyUsages = supplyService.useSupplies(production);
+            production.setSupplyUsages(supplyUsages);
         }
 
         production = productionRepository.save(production);
