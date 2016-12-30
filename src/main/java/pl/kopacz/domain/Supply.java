@@ -92,8 +92,12 @@ public class Supply implements Serializable {
         this.spice = spice;
     }
 
-    public void lowerAmount(Double amount) {
+    public void decreaseAmount(Double amount) {
         this.amount -= amount;
+    }
+
+    public void increaseAmount(Double amount) {
+        this.amount += amount;
     }
 
     @Override

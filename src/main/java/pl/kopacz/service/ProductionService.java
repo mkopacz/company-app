@@ -65,7 +65,9 @@ public class ProductionService {
 
     public void delete(Long id) {
         log.debug("Request to delete Production : {}", id);
-        productionRepository.delete(id);
+        Production production = productionRepository.findOne(id);
+        supplyService.returnSupplies(production);
+        productionRepository.delete(production);
     }
 
 }
