@@ -27,7 +27,7 @@
             <tbody>
                 <tr ng-repeat="production in vm.productions track by production.id">
                     <td><a ui-sref="production-detail({id:production.id})">{{production.id}}</a></td>
-                    <td>{{production.datetime | date:'shortDate'}}</td>
+                    <td>{{production.date | date:'shortDate'}}</td>
                     <td>
                         <div class="container-fluid">
                             <div class="row" ng-repeat="productionItem in production.productionItems">

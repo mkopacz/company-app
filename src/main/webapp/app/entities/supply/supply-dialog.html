@@ -27,13 +27,15 @@
         </div>
         <div class="form-group">
             <label class="control-label" for="field_expirationDate">Data ważności</label>
-                <div class="input-group">
-                    <input id="field_expirationDate" type="text" class="form-control" name="expirationDate" uib-datepicker-popup="{{dateformat}}" ng-model="vm.supply.expirationDate" is-open="vm.datePickerOpenStatus.expirationDate"
-                    required/>
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('expirationDate')"><i class="glyphicon glyphicon-calendar"></i></button>
-                    </span>
-                </div>
+            <div class="input-group">
+                <input id="field_expirationDate" type="text" class="form-control" name="expirationDate" uib-datepicker-popup="{{dateformat}}"
+                       ng-model="vm.supply.expirationDate" is-open="vm.datePickerOpenStatus.expirationDate" required/>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="vm.openCalendar('expirationDate')">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                    </button>
+                </span>
+            </div>
             <div ng-show="editForm.expirationDate.$invalid">
                 <p class="help-block"
                     ng-show="editForm.expirationDate.$error.required">

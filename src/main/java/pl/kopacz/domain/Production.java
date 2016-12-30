@@ -3,7 +3,7 @@ package pl.kopacz.domain;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -19,8 +19,8 @@ public class Production implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "datetime", nullable = false)
-    private ZonedDateTime datetime;
+    @Column(name = "date", nullable = false)
+    private LocalDate date;
 
     @NotNull
     @OneToMany(mappedBy = "production", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -34,17 +34,17 @@ public class Production implements Serializable {
         this.id = id;
     }
 
-    public ZonedDateTime getDatetime() {
-        return datetime;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public Production datetime(ZonedDateTime datetime) {
-        this.datetime = datetime;
+    public Production date(LocalDate date) {
+        this.date = date;
         return this;
     }
 
-    public void setDatetime(ZonedDateTime datetime) {
-        this.datetime = datetime;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public Set<ProductionItem> getProductionItems() {
@@ -96,7 +96,7 @@ public class Production implements Serializable {
     public String toString() {
         return "Production{" +
             "id=" + id +
-            ", datetime='" + datetime + "'" +
+            ", date='" + date + "'" +
             '}';
     }
 

@@ -95,7 +95,7 @@
                     resolve: {
                         entity: function () {
                             return {
-                                datetime: null,
+                                date: null,
                                 id: null,
                                 productionItems: [{
                                     amount: null,

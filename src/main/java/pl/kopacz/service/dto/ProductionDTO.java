@@ -2,7 +2,7 @@ package pl.kopacz.service.dto;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -12,7 +12,7 @@ public class ProductionDTO implements Serializable {
     private Long id;
 
     @NotNull
-    private ZonedDateTime datetime;
+    private LocalDate date;
 
     private Set<ProductionItemDTO> productionItems = new HashSet<>();
 
@@ -24,12 +24,12 @@ public class ProductionDTO implements Serializable {
         this.id = id;
     }
 
-    public ZonedDateTime getDatetime() {
-        return datetime;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setDatetime(ZonedDateTime datetime) {
-        this.datetime = datetime;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public Set<ProductionItemDTO> getProductionItems() {
@@ -65,7 +65,7 @@ public class ProductionDTO implements Serializable {
     public String toString() {
         return "ProductionDTO{" +
             "id=" + id +
-            ", datetime='" + datetime + "'" +
+            ", date='" + date + "'" +
             '}';
     }
 

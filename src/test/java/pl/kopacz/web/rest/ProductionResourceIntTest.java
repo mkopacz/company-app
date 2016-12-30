@@ -1,38 +1,33 @@
 package pl.kopacz.web.rest;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import pl.kopacz.CompanyApp;
-
 import pl.kopacz.domain.Production;
 import pl.kopacz.repository.ProductionRepository;
 import pl.kopacz.service.ProductionService;
 import pl.kopacz.service.dto.ProductionDTO;
 import pl.kopacz.service.mapper.ProductionMapper;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import static org.hamcrest.Matchers.hasItem;
-import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -45,9 +40,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = CompanyApp.class)
 public class ProductionResourceIntTest {
 
-    private static final ZonedDateTime DEFAULT_DATETIME = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_DATETIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
-    private static final String DEFAULT_DATETIME_STR = DateTimeFormatter.ISO_INSTANT.format(DEFAULT_DATETIME);
+    private static final LocalDate DEFAULT_DATE = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_DATE = LocalDate.now(ZoneId.systemDefault());
 
     @Inject
     private ProductionRepository productionRepository;
@@ -89,7 +83,7 @@ public class ProductionResourceIntTest {
      */
     public static Production createEntity(EntityManager em) {
         Production production = new Production()
-                .datetime(DEFAULT_DATETIME);
+                .date(DEFAULT_DATE);
         return production;
     }
 
@@ -115,15 +109,15 @@ public class ProductionResourceIntTest {
         List<Production> productions = productionRepository.findAll();
         assertThat(productions).hasSize(databaseSizeBeforeCreate + 1);
         Production testProduction = productions.get(productions.size() - 1);
-        assertThat(testProduction.getDatetime()).isEqualTo(DEFAULT_DATETIME);
+        assertThat(testProduction.getDate()).isEqualTo(DEFAULT_DATE);
     }
 
     @Test
     @Transactional
-    public void checkDatetimeIsRequired() throws Exception {
+    public void checkDateIsRequired() throws Exception {
         int databaseSizeBeforeTest = productionRepository.findAll().size();
         // set the field null
-        production.setDatetime(null);
+        production.setDate(null);
 
         // Create the Production, which fails.
         ProductionDTO productionDTO = productionMapper.productionToProductionDTO(production);
@@ -148,7 +142,7 @@ public class ProductionResourceIntTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(production.getId().intValue())))
-                .andExpect(jsonPath("$.[*].datetime").value(hasItem(DEFAULT_DATETIME_STR)));
+                .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())));
     }
 
     @Test
@@ -162,7 +156,7 @@ public class ProductionResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(production.getId().intValue()))
-            .andExpect(jsonPath("$.datetime").value(DEFAULT_DATETIME_STR));
+            .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()));
     }
 
     @Test
@@ -183,7 +177,7 @@ public class ProductionResourceIntTest {
         // Update the production
         Production updatedProduction = productionRepository.findOne(production.getId());
         updatedProduction
-                .datetime(UPDATED_DATETIME);
+                .date(UPDATED_DATE);
         ProductionDTO productionDTO = productionMapper.productionToProductionDTO(updatedProduction);
 
         restProductionMockMvc.perform(put("/api/productions")
@@ -195,7 +189,7 @@ public class ProductionResourceIntTest {
         List<Production> productions = productionRepository.findAll();
         assertThat(productions).hasSize(databaseSizeBeforeUpdate);
         Production testProduction = productions.get(productions.size() - 1);
-        assertThat(testProduction.getDatetime()).isEqualTo(UPDATED_DATETIME);
+        assertThat(testProduction.getDate()).isEqualTo(UPDATED_DATE);
     }
 
     @Test

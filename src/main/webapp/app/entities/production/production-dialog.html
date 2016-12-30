@@ -15,24 +15,20 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label" for="field_datetime">Data</label>
+            <label class="control-label" for="field_date">Data</label>
             <div class="input-group">
-                <input id="field_datetime" type="text" class="form-control" name="datetime" datetime-picker="{{dateformat}}"
-                       ng-model="vm.production.datetime" is-open="vm.datePickerOpenStatus.datetime" required  />
+                <input id="field_date" type="text" class="form-control" name="date" uib-datepicker-popup="{{dateformat}}"
+                       ng-model="vm.production.date" is-open="vm.datePickerOpenStatus.date" required/>
                 <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" ng-click="vm.openCalendar('datetime')">
+                    <button type="button" class="btn btn-default" ng-click="vm.openCalendar('date')">
                         <i class="glyphicon glyphicon-calendar"></i>
                     </button>
                 </span>
             </div>
-            <div ng-show="editForm.datetime.$invalid">
+            <div ng-show="editForm.date.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.datetime.$error.required">
+                   ng-show="editForm.date.$error.required">
                     To pole jest wymagane.
-                </p>
-                <p class="help-block"
-                    ng-show="editForm.datetime.$error.ZonedDateTimelocal">
-                    To pole powinno zawierać datę.
                 </p>
             </div>
         </div>
