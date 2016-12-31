@@ -75,14 +75,6 @@ public class SupplyService {
         return totalSupplyUsages;
     }
 
-    public void returnSupplies(Production production) {
-        log.debug("Request to return Supplies : {}", production);
-        production.getSupplyUsages().forEach(supplyUsage -> {
-            Supply supply = supplyUsage.getSupply();
-            supply.increaseAmount(supplyUsage.getAmount());
-        });
-    }
-
     private Set<SupplyUsage> useSupply(Spice spice, double amount) {
         Set<SupplyUsage> supplyUsages = new HashSet<>();
         List<Supply> supplies = supplyRepository.findBySpiceOrderByIdAsc(spice);
