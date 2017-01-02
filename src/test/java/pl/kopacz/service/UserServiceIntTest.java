@@ -1,24 +1,24 @@
 package pl.kopacz.service;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import pl.kopacz.CompanyApp;
 import pl.kopacz.domain.PersistentToken;
 import pl.kopacz.domain.User;
 import pl.kopacz.repository.PersistentTokenRepository;
 import pl.kopacz.repository.UserRepository;
-import java.time.ZonedDateTime;
-import pl.kopacz.service.util.RandomUtil;
-import java.time.LocalDate;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.test.context.junit4.SpringRunner;
+import pl.kopacz.web.rest.vm.ManagedUserVM;
 
 import javax.inject.Inject;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class for the UserResource REST controller.
@@ -66,26 +66,23 @@ public class UserServiceIntTest {
 
     @Test
     public void assertThatOnlyActivatedUserCanRequestPasswordReset() {
-        User user = userService.createUser("johndoe", "johndoe", "john.doe@localhost", "en-US");
+        User user = userService.createUser(generateManagedUserVM());
+        user.setActivated(false);
+
         Optional<User> maybeUser = userService.requestPasswordReset("john.doe@localhost");
         assertThat(maybeUser.isPresent()).isFalse();
+
         userRepository.delete(user);
     }
 
     @Test
     public void assertThatResetKeyMustNotBeOlderThan24Hours() {
-        User user = userService.createUser("johndoe", "johndoe", "john.doe@localhost", "en-US");
-
+        User user = userService.createUser(generateManagedUserVM());
         ZonedDateTime daysAgo = ZonedDateTime.now().minusHours(25);
-        String resetKey = RandomUtil.generateResetKey();
-        user.setActivated(true);
         user.setResetDate(daysAgo);
-        user.setResetKey(resetKey);
 
-        userRepository.save(user);
 
         Optional<User> maybeUser = userService.completePasswordReset("johndoe2", user.getResetKey());
-
         assertThat(maybeUser.isPresent()).isFalse();
 
         userRepository.delete(user);
@@ -93,28 +90,19 @@ public class UserServiceIntTest {
 
     @Test
     public void assertThatResetKeyMustBeValid() {
-        User user = userService.createUser("johndoe", "johndoe", "john.doe@localhost", "en-US");
+        User user = userService.createUser(generateManagedUserVM());
 
-        ZonedDateTime daysAgo = ZonedDateTime.now().minusHours(25);
-        user.setActivated(true);
-        user.setResetDate(daysAgo);
-        user.setResetKey("1234");
-        userRepository.save(user);
-        Optional<User> maybeUser = userService.completePasswordReset("johndoe2", user.getResetKey());
+        Optional<User> maybeUser = userService.completePasswordReset("johndoe2", "1234");
         assertThat(maybeUser.isPresent()).isFalse();
+
         userRepository.delete(user);
     }
 
     @Test
     public void assertThatUserCanResetPassword() {
-        User user = userService.createUser("johndoe", "johndoe", "john.doe@localhost", "en-US");
+        User user = userService.createUser(generateManagedUserVM());
         String oldPassword = user.getPassword();
-        ZonedDateTime daysAgo = ZonedDateTime.now().minusHours(2);
-        String resetKey = RandomUtil.generateResetKey();
-        user.setActivated(true);
-        user.setResetDate(daysAgo);
-        user.setResetKey(resetKey);
-        userRepository.save(user);
+
         Optional<User> maybeUser = userService.completePasswordReset("johndoe2", user.getResetKey());
         assertThat(maybeUser.isPresent()).isTrue();
         assertThat(maybeUser.get().getResetDate()).isNull();
@@ -142,4 +130,14 @@ public class UserServiceIntTest {
         token.setUserAgent("Test agent");
         persistentTokenRepository.saveAndFlush(token);
     }
+
+    private ManagedUserVM generateManagedUserVM() {
+        User user = new User();
+        user.setLogin("johndoe");
+        user.setPassword("johndoe");
+        user.setEmail("john.doe@localhost");
+        user.setLangKey("en-US");
+        return new ManagedUserVM(user);
+    }
+
 }

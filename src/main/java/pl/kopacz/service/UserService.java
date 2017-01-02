@@ -11,7 +11,6 @@ import pl.kopacz.domain.User;
 import pl.kopacz.repository.AuthorityRepository;
 import pl.kopacz.repository.PersistentTokenRepository;
 import pl.kopacz.repository.UserRepository;
-import pl.kopacz.security.AuthoritiesConstants;
 import pl.kopacz.security.SecurityUtils;
 import pl.kopacz.service.util.RandomUtil;
 import pl.kopacz.web.rest.vm.ManagedUserVM;
@@ -81,30 +80,6 @@ public class UserService {
                 userRepository.save(user);
                 return user;
             });
-    }
-
-    public User createUser(String login, String password, String email, String langKey) {
-        User newUser = new User();
-
-        Set<Authority> authorities = new HashSet<>();
-        Authority userAuthority = authorityRepository.findOne(AuthoritiesConstants.USER);
-        authorities.add(userAuthority);
-
-        String encryptedPassword = passwordEncoder.encode(password);
-        String activationKey = RandomUtil.generateActivationKey();
-
-        newUser.setLogin(login);
-        newUser.setPassword(encryptedPassword);
-        newUser.setEmail(email);
-        newUser.setLangKey(langKey);
-
-        newUser.setActivated(false);
-        newUser.setActivationKey(activationKey);
-        newUser.setAuthorities(authorities);
-
-        userRepository.save(newUser);
-        log.debug("Created Information for User: {}", newUser);
-        return newUser;
     }
 
     public User createUser(ManagedUserVM managedUserVM) {
@@ -207,12 +182,6 @@ public class UserService {
             user.getAuthorities().size(); // eagerly load the association
          }
          return user;
-    }
-
-    @Transactional(readOnly = true)
-    public List<User> listAllAdmins() {
-        Authority adminAuthority = authorityRepository.findOne(AuthoritiesConstants.ADMIN);
-        return userRepository.findAllByAuthority(adminAuthority);
     }
 
     /**

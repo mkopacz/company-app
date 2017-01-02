@@ -22,6 +22,8 @@ public class MailService {
 
     private final Logger log = LoggerFactory.getLogger(MailService.class);
 
+    private static final String ADMIN = "admin";
+
     private static final String USER = "user";
 
     private static final String BASE_URL = "baseUrl";
@@ -37,9 +39,6 @@ public class MailService {
 
     @Inject
     private SpringTemplateEngine templateEngine;
-
-    @Inject
-    private UserService userService;
 
     @Async
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
@@ -62,18 +61,18 @@ public class MailService {
     }
 
     @Async
-    public void sendActivationEmail(User user, String baseUrl) {
+    public void sendActivationEmail(User admin, User user, String baseUrl) {
+        log.debug("Sending activation e-mail to '{}'", admin.getEmail());
         Locale locale = Locale.forLanguageTag(user.getLangKey());
+
         Context context = new Context(locale);
+        context.setVariable(ADMIN, admin);
         context.setVariable(USER, user);
         context.setVariable(BASE_URL, baseUrl);
         String content = templateEngine.process("activationEmail", context);
         String subject = messageSource.getMessage("email.activation.title", null, locale);
 
-        userService.listAllAdmins().forEach(admin -> {
-            log.debug("Sending activation e-mail to '{}'", admin.getEmail());
-            sendEmail(admin.getEmail(), subject, content, false, true);
-        });
+        sendEmail(admin.getEmail(), subject, content, false, true);
     }
 
     @Async

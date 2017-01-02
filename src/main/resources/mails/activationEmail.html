@@ -5,7 +5,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     </head>
     <body>
-        <p>Witaj!</p>
+        <p>
+            Witaj <span th:text="${admin.login}">admin</span>!
+        </p>
         <p>
             Nowy użytkownik chce uzyskać dostęp do systemu. Dane użytkownika:
         </p>
@@ -14,11 +16,11 @@
                 <tbody>
                     <tr>
                         <td>Login: </td>
-                        <td th:text="|${user.login}|"></td>
+                        <td th:text="${user.login}">login</td>
                     </tr>
                     <tr>
                         <td>E-mail: </td>
-                        <td th:text="|${user.email}|"></td>
+                        <td th:text="${user.email}">e-mail</td>
                     </tr>
                 </tbody>
             </table>

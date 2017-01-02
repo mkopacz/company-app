@@ -9,12 +9,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.kopacz.config.JHipsterProperties;
 import pl.kopacz.domain.PersistentToken;
 import pl.kopacz.domain.User;
+import pl.kopacz.exception.EmailAlreadyExistsException;
+import pl.kopacz.exception.LoginAlreadyExistsException;
 import pl.kopacz.repository.PersistentTokenRepository;
 import pl.kopacz.repository.UserRepository;
 import pl.kopacz.security.SecurityUtils;
+import pl.kopacz.service.AccountService;
 import pl.kopacz.service.MailService;
 import pl.kopacz.service.UserService;
 import pl.kopacz.service.dto.UserDTO;
@@ -40,9 +42,6 @@ public class AccountResource {
     private final Logger log = LoggerFactory.getLogger(AccountResource.class);
 
     @Inject
-    private JHipsterProperties jHipsterProperties;
-
-    @Inject
     private UserRepository userRepository;
 
     @Inject
@@ -54,30 +53,23 @@ public class AccountResource {
     @Inject
     private MailService mailService;
 
-    /**
-     * POST  /register : register the user.
-     *
-     * @param managedUserVM the managed user View Model
-     * @return the ResponseEntity with status 201 (Created) if the user is registered or 400 (Bad Request) if the login or e-mail is already in use
-     */
+    @Inject
+    private AccountService accountService;
+
     @Timed
     @PostMapping(path = "/register", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
     public ResponseEntity<?> registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
         HttpHeaders textPlainHeaders = new HttpHeaders();
         textPlainHeaders.setContentType(MediaType.TEXT_PLAIN);
 
-        return userRepository.findOneByLogin(managedUserVM.getLogin().toLowerCase())
-            .map(user -> new ResponseEntity<>("login already in use", textPlainHeaders, HttpStatus.BAD_REQUEST))
-            .orElseGet(() -> userRepository.findOneByEmail(managedUserVM.getEmail())
-                .map(user -> new ResponseEntity<>("e-mail address already in use", textPlainHeaders, HttpStatus.BAD_REQUEST))
-                .orElseGet(() -> {
-                    User user = userService.createUser(managedUserVM.getLogin(), managedUserVM.getPassword(),
-                        managedUserVM.getEmail().toLowerCase(), managedUserVM.getLangKey());
-                    String baseUrl = jHipsterProperties.getMail().getBaseUrl();
-                    mailService.sendActivationEmail(user, baseUrl);
-                    return new ResponseEntity<>(HttpStatus.CREATED);
-                })
-        );
+        try {
+            accountService.registerAccount(managedUserVM);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (LoginAlreadyExistsException e) {
+            return new ResponseEntity<>("login already in use", textPlainHeaders, HttpStatus.BAD_REQUEST);
+        } catch (EmailAlreadyExistsException e) {
+            return new ResponseEntity<>("e-mail address already in use", textPlainHeaders, HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
