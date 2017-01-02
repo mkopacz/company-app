@@ -31,14 +31,11 @@ public class ProductionService {
     @Inject
     private SupplyService supplyService;
 
-    @Inject
-    private SupplyUsageService supplyUsageService;
-
     public ProductionDTO save(ProductionDTO productionDTO) {
         log.debug("Request to save Production : {}", productionDTO);
         Production production = productionMapper.productionDTOToProduction(productionDTO);
         if (production.getId() != null) {
-            supplyUsageService.returnSupplies(production.getId());
+            supplyService.returnSupplies(production.getId());
         }
 
         productionRepository.loadProducts(production);
@@ -70,7 +67,7 @@ public class ProductionService {
 
     public void delete(Long id) {
         log.debug("Request to delete Production : {}", id);
-        supplyUsageService.returnSupplies(id);
+        supplyService.returnSupplies(id);
         productionRepository.delete(id);
     }
 

@@ -11,6 +11,7 @@ import pl.kopacz.domain.Spice;
 import pl.kopacz.domain.Supply;
 import pl.kopacz.domain.SupplyUsage;
 import pl.kopacz.repository.SupplyRepository;
+import pl.kopacz.repository.SupplyUsageRepository;
 import pl.kopacz.service.dto.SupplyDTO;
 import pl.kopacz.service.mapper.SupplyMapper;
 
@@ -27,6 +28,9 @@ public class SupplyService {
 
     @Inject
     private SupplyRepository supplyRepository;
+
+    @Inject
+    private SupplyUsageRepository supplyUsageRepository;
 
     @Inject
     private SupplyMapper supplyMapper;
@@ -73,6 +77,16 @@ public class SupplyService {
         });
 
         return totalSupplyUsages;
+    }
+
+    public void returnSupplies(Long productionId) {
+        log.debug("Request to return Supplies : {}", productionId);
+        List<SupplyUsage> supplyUsages = supplyUsageRepository.findByProductionId(productionId);
+        supplyUsages.forEach(supplyUsage -> {
+            Supply supply = supplyUsage.getSupply();
+            supply.increaseAmount(supplyUsage.getAmount());
+        });
+        supplyUsageRepository.delete(supplyUsages);
     }
 
     private Set<SupplyUsage> useSupply(Spice spice, double amount) {
