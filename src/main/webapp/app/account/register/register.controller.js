@@ -6,43 +6,49 @@
         .controller('RegisterController', RegisterController);
 
 
-    RegisterController.$inject = [ '$timeout', 'Auth', 'LoginService'];
+    RegisterController.$inject = [ '$timeout', 'Auth'];
 
-    function RegisterController ($timeout, Auth, LoginService) {
+    function RegisterController ($timeout, Auth) {
         var vm = this;
 
-        vm.doNotMatch = null;
-        vm.error = null;
-        vm.errorUserExists = null;
-        vm.login = LoginService.open;
-        vm.register = register;
-        vm.registerAccount = {};
-        vm.success = null;
+        vm.success = false;
 
-        $timeout(function (){angular.element('#login').focus();});
+        vm.error = false;
+        vm.errorUserExists = false;
+        vm.errorEmailExists = false;
+        vm.doNotMatch = false;
+
+        vm.registerAccount = {};
+        vm.register = register;
+
+        $timeout(function () {
+            angular.element('#login').focus();
+        });
 
         function register () {
             if (vm.registerAccount.password !== vm.confirmPassword) {
-                vm.doNotMatch = 'ERROR';
+                vm.doNotMatch = true;
             } else {
-                vm.registerAccount.langKey =  'en' ;
-                vm.doNotMatch = null;
-                vm.error = null;
-                vm.errorUserExists = null;
-                vm.errorEmailExists = null;
+                vm.error = false;
+                vm.errorUserExists = false;
+                vm.errorEmailExists = false;
+                vm.doNotMatch = false;
 
-                Auth.createAccount(vm.registerAccount).then(function () {
-                    vm.success = 'OK';
-                }).catch(function (response) {
-                    vm.success = null;
-                    if (response.status === 400 && response.data === 'login already in use') {
-                        vm.errorUserExists = 'ERROR';
-                    } else if (response.status === 400 && response.data === 'e-mail address already in use') {
-                        vm.errorEmailExists = 'ERROR';
-                    } else {
-                        vm.error = 'ERROR';
-                    }
-                });
+                vm.registerAccount.langKey =  'pl';
+
+                Auth.createAccount(vm.registerAccount)
+                    .then(function () {
+                        vm.success = true;
+                    }).catch(function (response) {
+                        vm.success = false;
+                        if (response.status === 400 && response.data === 'login already in use') {
+                            vm.errorUserExists = true;
+                        } else if (response.status === 400 && response.data === 'e-mail address already in use') {
+                            vm.errorEmailExists = true;
+                        } else {
+                            vm.error = true;
+                        }
+                    });
             }
         }
     }

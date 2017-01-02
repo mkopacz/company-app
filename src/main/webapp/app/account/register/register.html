@@ -4,19 +4,23 @@
             <h1>Rejestracja</h1>
 
             <div class="alert alert-success" ng-show="vm.success">
-                <strong>Rejestracja przebiegła pomyślnie!</strong> Sprawdź swój e-mail w celu potwierdzenia konta.
+                <strong>Rejestracja przebiegła pomyślnie!</strong></br>
+                Proszę czekać na potwierdzenie konta przez administratora.
             </div>
 
             <div class="alert alert-danger" ng-show="vm.error">
-                <strong>Nie udało się zarejestrować!</strong> Spróbuj ponownie później.
+                <strong>Nie udało się zarejestrować!</strong></br>
+                Spróbuj ponownie później.
             </div>
 
             <div class="alert alert-danger" ng-show="vm.errorUserExists">
-                <strong>Podany login jest już zajęty!</strong> Podaj inny login i spóbuj ponownie.
+                <strong>Podany login jest już zajęty!</strong></br>
+                Podaj inny login i spóbuj ponownie.
             </div>
 
             <div class="alert alert-danger" ng-show="vm.errorEmailExists">
-                <strong>Podany e-mail jest już zajęty!</strong> Podaj inny e-mail i spóbuj ponownie.
+                <strong>Podany e-mail jest już zajęty!</strong></br>
+                Podaj inny e-mail i spóbuj ponownie.
             </div>
 
             <div class="alert alert-danger" ng-show="vm.doNotMatch">
@@ -31,93 +35,78 @@
                     <input type="text" class="form-control" id="login" name="login" placeholder="Twój login"
                            ng-model="vm.registerAccount.login" ng-minlength=1 ng-maxlength=50 ng-pattern="/^[_'.@A-Za-z0-9-]*$/" required>
                     <div ng-show="form.login.$dirty && form.login.$invalid">
-                        <p class="help-block"
-                               ng-show="form.login.$error.required">
+                        <p class="help-block" ng-show="form.login.$error.required">
                             Login jest wymagany.
                         </p>
-                        <p class="help-block"
-                               ng-show="form.login.$error.minlength">
-                            Login musi mieć conajmniej 1 znak.
+                        <p class="help-block" ng-show="form.login.$error.minlength">
+                            Login musi mieć co najmniej 1 znak.
                         </p>
-                        <p class="help-block"
-                               ng-show="form.login.$error.maxlength">
-                            Login musi mieć conajwyżej 50 znaków.
+                        <p class="help-block" ng-show="form.login.$error.maxlength">
+                            Login musi mieć co najwyżej 50 znaków.
                         </p>
-                        <p class="help-block"
-                               ng-show="form.login.$error.pattern">
-                            Login musi zawierać tylko małe litery i cyfry.
+                        <p class="help-block" ng-show="form.login.$error.pattern">
+                            Login musi zawierać tylko małe lub duże litery oraz cyfry.
                     </p>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label class="control-label" for="email">E-mail</label>
                     <input type="email" class="form-control" id="email" name="email" placeholder="Twój e-mail"
                            ng-model="vm.registerAccount.email" ng-minlength=5 ng-maxlength=100 required>
                     <div ng-show="form.email.$dirty && form.email.$invalid">
-                        <p class="help-block"
-                               ng-show="form.email.$error.required">
+                        <p class="help-block" ng-show="form.email.$error.required">
                             E-mail jest wymagany.
                         </p>
-                        <p class="help-block"
-                               ng-show="form.email.$error.email">
+                        <p class="help-block" ng-show="form.email.$error.email">
                             E-mail jest nieprawidłowy.
                         </p>
-                        <p class="help-block"
-                               ng-show="form.email.$error.minlength">
-                            E-mail musi mieć conajmniej 5 znaków.
+                        <p class="help-block" ng-show="form.email.$error.minlength">
+                            E-mail musi mieć co najmniej 5 znaków.
                         </p>
-                        <p class="help-block"
-                               ng-show="form.email.$error.maxlength">
-                            E-mail musi mieć conajwyżej 100 znaków.
+                        <p class="help-block" ng-show="form.email.$error.maxlength">
+                            E-mail musi mieć co najwyżej 100 znaków.
                         </p>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label class="control-label" for="password">Hasło</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="Twoje hasło"
                            ng-model="vm.registerAccount.password" ng-minlength=4 ng-maxlength=50 required>
                     <div ng-show="form.password.$dirty && form.password.$invalid">
-                        <p class="help-block"
-                               ng-show="form.password.$error.required">
+                        <p class="help-block" ng-show="form.password.$error.required">
                             Hasło jest wymagane.
                         </p>
-                        <p class="help-block"
-                               ng-show="form.password.$error.minlength">
-                            Hasło musi mieć conajmniej 4 znaki.
+                        <p class="help-block" ng-show="form.password.$error.minlength">
+                            Hasło musi mieć co najmniej 4 znaki.
                         </p>
-                        <p class="help-block"
-                               ng-show="form.password.$error.maxlength">
-                            Hasło musi mieć conajwyżej 50 znaków.
+                        <p class="help-block" ng-show="form.password.$error.maxlength">
+                            Hasło musi mieć co najwyżej 50 znaków.
                         </p>
                     </div>
                     <password-strength-bar password-to-check="vm.registerAccount.password"></password-strength-bar>
                 </div>
+
                 <div class="form-group">
                     <label class="control-label" for="confirmPassword">Powtórz hasło</label>
                     <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Twoje hasło"
                            ng-model="vm.confirmPassword" ng-minlength=4 ng-maxlength=50 required>
                     <div ng-show="form.confirmPassword.$dirty && form.confirmPassword.$invalid">
-                        <p class="help-block"
-                               ng-show="form.confirmPassword.$error.required">
+                        <p class="help-block" ng-show="form.confirmPassword.$error.required">
                             Hasło jest wymagane.
                         </p>
-                        <p class="help-block"
-                               ng-show="form.confirmPassword.$error.minlength">
-                            Hasło musi mieć conajmniej 4 znaki.
+                        <p class="help-block" ng-show="form.confirmPassword.$error.minlength">
+                            Hasło musi mieć co najmniej 4 znaki.
                         </p>
-                        <p class="help-block"
-                               ng-show="form.confirmPassword.$error.maxlength">
-                            Hasło musi mieć conajwyżej 50 znaków.
+                        <p class="help-block" ng-show="form.confirmPassword.$error.maxlength">
+                            Hasło musi mieć co najwyżej 50 znaków.
                         </p>
                     </div>
                 </div>
 
                 <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">Zarejestruj się</button>
             </form>
-            <p></p>
-            <div class="alert alert-warning">
-                Jeśli chcesz się zalogować kliknij <a class="alert-link" href="" ng-click="vm.login()">tutaj</a>.
-            </div>
         </div>
     </div>
 </div>

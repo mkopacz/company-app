@@ -1,5 +1,11 @@
 package pl.kopacz.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.kopacz.domain.Authority;
 import pl.kopacz.domain.User;
 import pl.kopacz.repository.AuthorityRepository;
@@ -9,21 +15,15 @@ import pl.kopacz.security.AuthoritiesConstants;
 import pl.kopacz.security.SecurityUtils;
 import pl.kopacz.service.util.RandomUtil;
 import pl.kopacz.web.rest.vm.ManagedUserVM;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import javax.inject.Inject;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
-/**
- * Service class for managing users.
- */
 @Service
 @Transactional
 public class UserService {
@@ -83,26 +83,25 @@ public class UserService {
             });
     }
 
-    public User createUser(String login, String password, String firstName, String lastName, String email,
-        String langKey) {
-
+    public User createUser(String login, String password, String email, String langKey) {
         User newUser = new User();
-        Authority authority = authorityRepository.findOne(AuthoritiesConstants.USER);
+
         Set<Authority> authorities = new HashSet<>();
+        Authority userAuthority = authorityRepository.findOne(AuthoritiesConstants.USER);
+        authorities.add(userAuthority);
+
         String encryptedPassword = passwordEncoder.encode(password);
+        String activationKey = RandomUtil.generateActivationKey();
+
         newUser.setLogin(login);
-        // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
-        newUser.setFirstName(firstName);
-        newUser.setLastName(lastName);
         newUser.setEmail(email);
         newUser.setLangKey(langKey);
-        // new user is not active
+
         newUser.setActivated(false);
-        // new user gets registration key
-        newUser.setActivationKey(RandomUtil.generateActivationKey());
-        authorities.add(authority);
+        newUser.setActivationKey(activationKey);
         newUser.setAuthorities(authorities);
+
         userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
         return newUser;
@@ -208,6 +207,12 @@ public class UserService {
             user.getAuthorities().size(); // eagerly load the association
          }
          return user;
+    }
+
+    @Transactional(readOnly = true)
+    public List<User> listAllAdmins() {
+        Authority adminAuthority = authorityRepository.findOne(AuthoritiesConstants.ADMIN);
+        return userRepository.findAllByAuthority(adminAuthority);
     }
 
     /**

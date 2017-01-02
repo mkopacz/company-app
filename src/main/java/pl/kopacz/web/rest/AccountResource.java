@@ -1,7 +1,14 @@
 package pl.kopacz.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import pl.kopacz.config.JHipsterProperties;
 import pl.kopacz.domain.PersistentToken;
 import pl.kopacz.domain.User;
@@ -11,25 +18,17 @@ import pl.kopacz.security.SecurityUtils;
 import pl.kopacz.service.MailService;
 import pl.kopacz.service.UserService;
 import pl.kopacz.service.dto.UserDTO;
+import pl.kopacz.web.rest.util.HeaderUtil;
 import pl.kopacz.web.rest.vm.KeyAndPasswordVM;
 import pl.kopacz.web.rest.vm.ManagedUserVM;
-import pl.kopacz.web.rest.util.HeaderUtil;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * REST controller for managing the current user's account.
@@ -59,14 +58,11 @@ public class AccountResource {
      * POST  /register : register the user.
      *
      * @param managedUserVM the managed user View Model
-     * @param request the HTTP request
      * @return the ResponseEntity with status 201 (Created) if the user is registered or 400 (Bad Request) if the login or e-mail is already in use
      */
-    @PostMapping(path = "/register",
-                    produces={MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
     @Timed
-    public ResponseEntity<?> registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM, HttpServletRequest request) {
-
+    @PostMapping(path = "/register", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
+    public ResponseEntity<?> registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
         HttpHeaders textPlainHeaders = new HttpHeaders();
         textPlainHeaders.setContentType(MediaType.TEXT_PLAIN);
 
@@ -75,22 +71,9 @@ public class AccountResource {
             .orElseGet(() -> userRepository.findOneByEmail(managedUserVM.getEmail())
                 .map(user -> new ResponseEntity<>("e-mail address already in use", textPlainHeaders, HttpStatus.BAD_REQUEST))
                 .orElseGet(() -> {
-                    User user = userService
-                        .createUser(managedUserVM.getLogin(), managedUserVM.getPassword(),
-                            managedUserVM.getFirstName(), managedUserVM.getLastName(),
-                            managedUserVM.getEmail().toLowerCase(), managedUserVM.getLangKey());
-
-
+                    User user = userService.createUser(managedUserVM.getLogin(), managedUserVM.getPassword(),
+                        managedUserVM.getEmail().toLowerCase(), managedUserVM.getLangKey());
                     String baseUrl = jHipsterProperties.getMail().getBaseUrl();
-                    if (baseUrl.equals("")) {
-                        baseUrl = request.getScheme() + // "http"
-                        "://" +                         // "://"
-                        request.getServerName() +       // "myhost"
-                        ":" +                           // ":"
-                        request.getServerPort() +       // "80"
-                        request.getContextPath();       // "/myContextPath" or "" if deployed in root context
-                    }
-
                     mailService.sendActivationEmail(user, baseUrl);
                     return new ResponseEntity<>(HttpStatus.CREATED);
                 })

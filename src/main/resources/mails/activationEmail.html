@@ -1,24 +1,35 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title th:text="#{email.activation.title}">JHipster activation</title>
+        <title>[ZPM Kopacz] Rejestracja użytkownika</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     </head>
     <body>
-        <p th:text="#{email.activation.greeting(${user.login})}">
-            Dear
-        </p>
-        <p th:text="#{email.activation.text1}">
-            Your JHipster account has been created, please click on the URL below to activate it:
+        <p>Witaj!</p>
+        <p>
+            Nowy użytkownik chce uzyskać dostęp do systemu. Dane użytkownika:
         </p>
         <p>
-            <a th:href="@{|${baseUrl}/#/activate?key=${user.activationKey}|}"
-               th:text="|${user.login}|">Activation Link</a>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>Login: </td>
+                        <td th:text="|${user.login}|"></td>
+                    </tr>
+                    <tr>
+                        <td>E-mail: </td>
+                        <td th:text="|${user.email}|"></td>
+                    </tr>
+                </tbody>
+            </table>
         </p>
         <p>
-            <span th:text="#{email.activation.text2}">Regards, </span>
-            <br/>
-            <em th:text="#{email.signature}">JHipster.</em>
+            Jeśli chcesz aktywować konto tego użytkownika, kliknij w poniższy link:<br/>
+            <a th:href="@{|${baseUrl}/#/activate?key=${user.activationKey}|}">link aktywacyjny</a>
+        </p>
+        <p>
+            Pozdrawiam,<br/>
+            <em>CompanyApp</em>
         </p>
     </body>
 </html>
