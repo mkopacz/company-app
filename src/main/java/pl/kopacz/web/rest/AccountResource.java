@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.*;
 import pl.kopacz.domain.PersistentToken;
 import pl.kopacz.domain.User;
 import pl.kopacz.exception.EmailAlreadyExistsException;
+import pl.kopacz.exception.EmailNotRegisteredException;
 import pl.kopacz.exception.LoginAlreadyExistsException;
 import pl.kopacz.repository.PersistentTokenRepository;
 import pl.kopacz.repository.UserRepository;
 import pl.kopacz.security.SecurityUtils;
 import pl.kopacz.service.AccountService;
-import pl.kopacz.service.MailService;
 import pl.kopacz.service.UserService;
 import pl.kopacz.service.dto.UserDTO;
 import pl.kopacz.web.rest.util.HeaderUtil;
@@ -49,9 +49,6 @@ public class AccountResource {
 
     @Inject
     private PersistentTokenRepository persistentTokenRepository;
-
-    @Inject
-    private MailService mailService;
 
     @Inject
     private AccountService accountService;
@@ -195,28 +192,15 @@ public class AccountResource {
         });
     }
 
-    /**
-     * POST   /account/reset_password/init : Send an e-mail to reset the password of the user
-     *
-     * @param mail the mail of the user
-     * @param request the HTTP request
-     * @return the ResponseEntity with status 200 (OK) if the e-mail was sent, or status 400 (Bad Request) if the e-mail address is not registered
-     */
-    @PostMapping(path = "/account/reset_password/init",
-        produces = MediaType.TEXT_PLAIN_VALUE)
     @Timed
-    public ResponseEntity<?> requestPasswordReset(@RequestBody String mail, HttpServletRequest request) {
-        return userService.requestPasswordReset(mail)
-            .map(user -> {
-                String baseUrl = request.getScheme() +
-                    "://" +
-                    request.getServerName() +
-                    ":" +
-                    request.getServerPort() +
-                    request.getContextPath();
-                mailService.sendPasswordResetMail(user, baseUrl);
-                return new ResponseEntity<>("e-mail was sent", HttpStatus.OK);
-            }).orElse(new ResponseEntity<>("e-mail address not registered", HttpStatus.BAD_REQUEST));
+    @PostMapping(path = "/account/reset_password/init", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<?> requestPasswordReset(@RequestBody String mail) {
+        try {
+            accountService.requestPasswordReset(mail);
+            return new ResponseEntity<>("e-mail was sent", HttpStatus.OK);
+        } catch (EmailNotRegisteredException e) {
+            return new ResponseEntity<>("e-mail address not registered", HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**

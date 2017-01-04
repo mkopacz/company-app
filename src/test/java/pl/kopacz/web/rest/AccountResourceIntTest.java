@@ -12,7 +12,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pl.kopacz.CompanyApp;
-import pl.kopacz.config.JHipsterProperties;
 import pl.kopacz.domain.Authority;
 import pl.kopacz.domain.User;
 import pl.kopacz.repository.AuthorityRepository;
@@ -50,9 +49,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AccountResourceIntTest {
 
     @Inject
-    private JHipsterProperties jHipsterProperties;
-
-    @Inject
     private UserRepository userRepository;
 
     @Inject
@@ -77,20 +73,18 @@ public class AccountResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        doNothing().when(mockMailService).sendActivationEmail((User) anyObject(), (User) anyObject(), anyString());
+        doNothing().when(mockMailService).sendActivationEmail(anyObject(), anyObject(), anyString());
 
         ReflectionTestUtils.setField(accountService, "mailService", mockMailService);
 
         AccountResource accountResource = new AccountResource();
         ReflectionTestUtils.setField(accountResource, "userRepository", userRepository);
         ReflectionTestUtils.setField(accountResource, "userService", userService);
-        ReflectionTestUtils.setField(accountResource, "mailService", mockMailService);
         ReflectionTestUtils.setField(accountResource, "accountService", accountService);
 
         AccountResource accountUserMockResource = new AccountResource();
         ReflectionTestUtils.setField(accountUserMockResource, "userRepository", userRepository);
         ReflectionTestUtils.setField(accountUserMockResource, "userService", mockUserService);
-        ReflectionTestUtils.setField(accountUserMockResource, "mailService", mockMailService);
 
         this.restMvc = MockMvcBuilders.standaloneSetup(accountResource).build();
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(accountUserMockResource).build();

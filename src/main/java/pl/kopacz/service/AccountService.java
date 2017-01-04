@@ -9,6 +9,7 @@ import pl.kopacz.config.JHipsterProperties;
 import pl.kopacz.domain.Authority;
 import pl.kopacz.domain.User;
 import pl.kopacz.exception.EmailAlreadyExistsException;
+import pl.kopacz.exception.EmailNotRegisteredException;
 import pl.kopacz.exception.LoginAlreadyExistsException;
 import pl.kopacz.repository.AuthorityRepository;
 import pl.kopacz.repository.UserRepository;
@@ -17,6 +18,7 @@ import pl.kopacz.service.util.RandomUtil;
 import pl.kopacz.web.rest.vm.ManagedUserVM;
 
 import javax.inject.Inject;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,6 +52,15 @@ public class AccountService {
             User newUser = createUser(managedUserVM);
             sendActivationEmails(newUser);
         }
+    }
+
+    public void requestPasswordReset(String mail) throws EmailNotRegisteredException {
+        User user = userRepository.findOneByEmail(mail)
+            .filter(User::getActivated)
+            .orElseThrow(() -> new EmailNotRegisteredException());
+
+        initResetKey(user);
+        sendPasswordResetMail(user);
     }
 
     private boolean checkIfLoginExists(ManagedUserVM managedUserVM) {
@@ -91,6 +102,17 @@ public class AccountService {
         userRepository.findAllByAuthority(adminAuthority).forEach(
             admin -> mailService.sendActivationEmail(admin, newUser, baseUrl)
         );
+    }
+
+    private void initResetKey(User user) {
+        user.setResetKey(RandomUtil.generateResetKey());
+        user.setResetDate(ZonedDateTime.now());
+        userRepository.save(user);
+    }
+
+    private void sendPasswordResetMail(User user) {
+        String baseUrl = jHipsterProperties.getMail().getBaseUrl();
+        mailService.sendPasswordResetMail(user, baseUrl);
     }
 
 }

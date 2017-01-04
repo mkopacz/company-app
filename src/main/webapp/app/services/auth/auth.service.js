@@ -140,11 +140,12 @@
         function resetPasswordInit (mail, callback) {
             var cb = callback || angular.noop;
 
-            return PasswordResetInit.save(mail, function() {
-                return cb();
-            }, function (err) {
-                return cb(err);
-            }).$promise;
+            return PasswordResetInit.save(mail,
+                function() {
+                    return cb();
+                }, function (err) {
+                    return cb(err);
+                }).$promise;
         }
 
         function updateAccount (account, callback) {

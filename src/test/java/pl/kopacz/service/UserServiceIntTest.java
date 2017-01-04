@@ -10,7 +10,7 @@ import pl.kopacz.domain.PersistentToken;
 import pl.kopacz.domain.User;
 import pl.kopacz.repository.PersistentTokenRepository;
 import pl.kopacz.repository.UserRepository;
-import pl.kopacz.web.rest.vm.ManagedUserVM;
+import pl.kopacz.util.TestDataUtil;
 
 import javax.inject.Inject;
 import java.time.LocalDate;
@@ -52,32 +52,8 @@ public class UserServiceIntTest {
     }
 
     @Test
-    public void assertThatUserMustExistToResetPassword() {
-        Optional<User> maybeUser = userService.requestPasswordReset("john.doe@localhost");
-        assertThat(maybeUser.isPresent()).isFalse();
-
-        maybeUser = userService.requestPasswordReset("admin@localhost");
-        assertThat(maybeUser.isPresent()).isTrue();
-
-        assertThat(maybeUser.get().getEmail()).isEqualTo("admin@localhost");
-        assertThat(maybeUser.get().getResetDate()).isNotNull();
-        assertThat(maybeUser.get().getResetKey()).isNotNull();
-    }
-
-    @Test
-    public void assertThatOnlyActivatedUserCanRequestPasswordReset() {
-        User user = userService.createUser(generateManagedUserVM());
-        user.setActivated(false);
-
-        Optional<User> maybeUser = userService.requestPasswordReset("john.doe@localhost");
-        assertThat(maybeUser.isPresent()).isFalse();
-
-        userRepository.delete(user);
-    }
-
-    @Test
     public void assertThatResetKeyMustNotBeOlderThan24Hours() {
-        User user = userService.createUser(generateManagedUserVM());
+        User user = userService.createUser(TestDataUtil.generateManagedUserVM());
         ZonedDateTime daysAgo = ZonedDateTime.now().minusHours(25);
         user.setResetDate(daysAgo);
 
@@ -90,7 +66,7 @@ public class UserServiceIntTest {
 
     @Test
     public void assertThatResetKeyMustBeValid() {
-        User user = userService.createUser(generateManagedUserVM());
+        User user = userService.createUser(TestDataUtil.generateManagedUserVM());
 
         Optional<User> maybeUser = userService.completePasswordReset("johndoe2", "1234");
         assertThat(maybeUser.isPresent()).isFalse();
@@ -100,7 +76,7 @@ public class UserServiceIntTest {
 
     @Test
     public void assertThatUserCanResetPassword() {
-        User user = userService.createUser(generateManagedUserVM());
+        User user = userService.createUser(TestDataUtil.generateManagedUserVM());
         String oldPassword = user.getPassword();
 
         Optional<User> maybeUser = userService.completePasswordReset("johndoe2", user.getResetKey());
@@ -129,15 +105,6 @@ public class UserServiceIntTest {
         token.setIpAddress("127.0.0.1");
         token.setUserAgent("Test agent");
         persistentTokenRepository.saveAndFlush(token);
-    }
-
-    private ManagedUserVM generateManagedUserVM() {
-        User user = new User();
-        user.setLogin("johndoe");
-        user.setPassword("johndoe");
-        user.setEmail("john.doe@localhost");
-        user.setLangKey("en-US");
-        return new ManagedUserVM(user);
     }
 
 }

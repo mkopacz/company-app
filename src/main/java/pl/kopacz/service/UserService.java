@@ -71,17 +71,6 @@ public class UserService {
            });
     }
 
-    public Optional<User> requestPasswordReset(String mail) {
-        return userRepository.findOneByEmail(mail)
-            .filter(User::getActivated)
-            .map(user -> {
-                user.setResetKey(RandomUtil.generateResetKey());
-                user.setResetDate(ZonedDateTime.now());
-                userRepository.save(user);
-                return user;
-            });
-    }
-
     public User createUser(ManagedUserVM managedUserVM) {
         User user = new User();
         user.setLogin(managedUserVM.getLogin());
