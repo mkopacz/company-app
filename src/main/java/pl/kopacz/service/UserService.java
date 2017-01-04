@@ -54,23 +54,6 @@ public class UserService {
             });
     }
 
-    public Optional<User> completePasswordReset(String newPassword, String key) {
-       log.debug("Reset user password for reset key {}", key);
-
-       return userRepository.findOneByResetKey(key)
-            .filter(user -> {
-                ZonedDateTime oneDayAgo = ZonedDateTime.now().minusHours(24);
-                return user.getResetDate().isAfter(oneDayAgo);
-           })
-           .map(user -> {
-                user.setPassword(passwordEncoder.encode(newPassword));
-                user.setResetKey(null);
-                user.setResetDate(null);
-                userRepository.save(user);
-                return user;
-           });
-    }
-
     public User createUser(ManagedUserVM managedUserVM) {
         User user = new User();
         user.setLogin(managedUserVM.getLogin());

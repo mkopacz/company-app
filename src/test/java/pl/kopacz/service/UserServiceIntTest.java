@@ -10,13 +10,11 @@ import pl.kopacz.domain.PersistentToken;
 import pl.kopacz.domain.User;
 import pl.kopacz.repository.PersistentTokenRepository;
 import pl.kopacz.repository.UserRepository;
-import pl.kopacz.util.TestDataUtil;
 
 import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -49,43 +47,6 @@ public class UserServiceIntTest {
         assertThat(persistentTokenRepository.findByUser(admin)).hasSize(existingCount + 2);
         userService.removeOldPersistentTokens();
         assertThat(persistentTokenRepository.findByUser(admin)).hasSize(existingCount + 1);
-    }
-
-    @Test
-    public void assertThatResetKeyMustNotBeOlderThan24Hours() {
-        User user = userService.createUser(TestDataUtil.generateManagedUserVM());
-        ZonedDateTime daysAgo = ZonedDateTime.now().minusHours(25);
-        user.setResetDate(daysAgo);
-
-
-        Optional<User> maybeUser = userService.completePasswordReset("johndoe2", user.getResetKey());
-        assertThat(maybeUser.isPresent()).isFalse();
-
-        userRepository.delete(user);
-    }
-
-    @Test
-    public void assertThatResetKeyMustBeValid() {
-        User user = userService.createUser(TestDataUtil.generateManagedUserVM());
-
-        Optional<User> maybeUser = userService.completePasswordReset("johndoe2", "1234");
-        assertThat(maybeUser.isPresent()).isFalse();
-
-        userRepository.delete(user);
-    }
-
-    @Test
-    public void assertThatUserCanResetPassword() {
-        User user = userService.createUser(TestDataUtil.generateManagedUserVM());
-        String oldPassword = user.getPassword();
-
-        Optional<User> maybeUser = userService.completePasswordReset("johndoe2", user.getResetKey());
-        assertThat(maybeUser.isPresent()).isTrue();
-        assertThat(maybeUser.get().getResetDate()).isNull();
-        assertThat(maybeUser.get().getResetKey()).isNull();
-        assertThat(maybeUser.get().getPassword()).isNotEqualTo(oldPassword);
-
-        userRepository.delete(user);
     }
 
     @Test

@@ -1,16 +1,16 @@
 package pl.kopacz.web.rest.vm;
 
-/**
- * View Model object for storing the user's key and password.
- */
+import javax.validation.constraints.Size;
+
 public class KeyAndPasswordVM {
+
+    public static final int PASSWORD_MIN_LENGTH = 4;
+    public static final int PASSWORD_MAX_LENGTH = 100;
 
     private String key;
 
+    @Size(min = PASSWORD_MIN_LENGTH, max = PASSWORD_MAX_LENGTH)
     private String newPassword;
-
-    public KeyAndPasswordVM() {
-    }
 
     public String getKey() {
         return key;
@@ -27,4 +27,5 @@ public class KeyAndPasswordVM {
     public void setNewPassword(String newPassword) {
         this.newPassword = newPassword;
     }
+
 }

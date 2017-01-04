@@ -130,11 +130,12 @@
         function resetPasswordFinish (keyAndPassword, callback) {
             var cb = callback || angular.noop;
 
-            return PasswordResetFinish.save(keyAndPassword, function () {
-                return cb();
-            }, function (err) {
-                return cb(err);
-            }).$promise;
+            return PasswordResetFinish.save(keyAndPassword,
+                function () {
+                    return cb();
+                }, function (err) {
+                    return cb(err);
+                }).$promise;
         }
 
         function resetPasswordInit (mail, callback) {

@@ -10,29 +10,36 @@
     function ResetFinishController ($stateParams, $timeout, Auth, LoginService) {
         var vm = this;
 
-        vm.keyMissing = angular.isUndefined($stateParams.key);
-        vm.confirmPassword = null;
-        vm.doNotMatch = null;
-        vm.error = null;
-        vm.finishReset = finishReset;
-        vm.login = LoginService.open;
-        vm.resetAccount = {};
-        vm.success = null;
+        vm.success = false;
 
-        $timeout(function (){angular.element('#password').focus();});
+        vm.error = false;
+        vm.doNotMatch = false;
+
+        vm.resetAccount = {};
+        vm.confirmPassword = null;
+        vm.finishReset = finishReset;
+
+        vm.login = LoginService.open;
+        vm.keyMissing = angular.isUndefined($stateParams.key);
+
+        $timeout(function () {
+            angular.element('#password').focus();
+        });
 
         function finishReset() {
-            vm.doNotMatch = null;
-            vm.error = null;
+            vm.error = false;
+            vm.doNotMatch = false;
+
             if (vm.resetAccount.password !== vm.confirmPassword) {
-                vm.doNotMatch = 'ERROR';
+                vm.doNotMatch = true;
             } else {
-                Auth.resetPasswordFinish({key: $stateParams.key, newPassword: vm.resetAccount.password}).then(function () {
-                    vm.success = 'OK';
-                }).catch(function () {
-                    vm.success = null;
-                    vm.error = 'ERROR';
-                });
+                Auth.resetPasswordFinish({key: $stateParams.key, newPassword: vm.resetAccount.password})
+                    .then(function () {
+                        vm.success = true;
+                    }).catch(function () {
+                        vm.success = false;
+                        vm.error = true;
+                    });
             }
         }
     }

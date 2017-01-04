@@ -11,6 +11,7 @@ import pl.kopacz.domain.User;
 import pl.kopacz.exception.EmailAlreadyExistsException;
 import pl.kopacz.exception.EmailNotRegisteredException;
 import pl.kopacz.exception.LoginAlreadyExistsException;
+import pl.kopacz.exception.ValidResetKeyNotFoundException;
 import pl.kopacz.repository.AuthorityRepository;
 import pl.kopacz.repository.UserRepository;
 import pl.kopacz.security.AuthoritiesConstants;
@@ -63,6 +64,14 @@ public class AccountService {
         sendPasswordResetMail(user);
     }
 
+    public void completePasswordReset(String newPassword, String key) throws ValidResetKeyNotFoundException {
+        User user = userRepository.findOneByResetKey(key)
+            .filter(User::isResetKeyValid)
+            .orElseThrow(() -> new ValidResetKeyNotFoundException());
+
+        changePassword(user, newPassword);
+    }
+
     private boolean checkIfLoginExists(ManagedUserVM managedUserVM) {
         return userRepository.findOneByLogin(managedUserVM.getLogin()).isPresent();
     }
@@ -113,6 +122,14 @@ public class AccountService {
     private void sendPasswordResetMail(User user) {
         String baseUrl = jHipsterProperties.getMail().getBaseUrl();
         mailService.sendPasswordResetMail(user, baseUrl);
+    }
+
+    private void changePassword(User user, String newPassword) {
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedPassword);
+        user.setResetKey(null);
+        user.setResetDate(null);
+        userRepository.save(user);
     }
 
 }

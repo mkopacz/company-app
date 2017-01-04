@@ -12,10 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.kopacz.CompanyApp;
 import pl.kopacz.domain.User;
 import pl.kopacz.exception.EmailNotRegisteredException;
+import pl.kopacz.exception.ValidResetKeyNotFoundException;
 import pl.kopacz.repository.UserRepository;
 import pl.kopacz.util.TestDataUtil;
 
 import javax.inject.Inject;
+import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Matchers.anyObject;
@@ -70,6 +72,48 @@ public class AccountServiceIntTest {
             accountService.requestPasswordReset("john.doe@localhost");
             fail("User must be active to reset password");
         } catch (EmailNotRegisteredException e) {
+        }
+
+        userRepository.delete(user);
+    }
+
+    @Test
+    public void assertThatResetKeyMustNotBeOlderThan24Hours() {
+        User user = userService.createUser(TestDataUtil.generateManagedUserVM());
+        ZonedDateTime daysAgo = ZonedDateTime.now().minusHours(25);
+        user.setResetDate(daysAgo);
+
+
+        try {
+            accountService.completePasswordReset("johndoe2", user.getResetKey());
+            fail("Reset key must not be older than 24 hours to reset password");
+        } catch (ValidResetKeyNotFoundException e) {
+        }
+
+        userRepository.delete(user);
+    }
+
+    @Test
+    public void assertThatResetKeyMustBeValid() {
+        User user = userService.createUser(TestDataUtil.generateManagedUserVM());
+
+        try {
+            accountService.completePasswordReset("johndoe2", "1234");
+            fail("Reset key must be valid to reset password");
+        } catch (ValidResetKeyNotFoundException e) {
+        }
+
+        userRepository.delete(user);
+    }
+
+    @Test
+    public void assertThatUserCanResetPassword() {
+        User user = userService.createUser(TestDataUtil.generateManagedUserVM());
+
+        try {
+            accountService.completePasswordReset("johndoe2", user.getResetKey());
+        } catch (ValidResetKeyNotFoundException e) {
+            fail("User should be able to reset password");
         }
 
         userRepository.delete(user);

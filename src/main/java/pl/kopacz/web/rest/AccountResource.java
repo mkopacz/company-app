@@ -14,6 +14,7 @@ import pl.kopacz.domain.User;
 import pl.kopacz.exception.EmailAlreadyExistsException;
 import pl.kopacz.exception.EmailNotRegisteredException;
 import pl.kopacz.exception.LoginAlreadyExistsException;
+import pl.kopacz.exception.ValidResetKeyNotFoundException;
 import pl.kopacz.repository.PersistentTokenRepository;
 import pl.kopacz.repository.UserRepository;
 import pl.kopacz.security.SecurityUtils;
@@ -203,23 +204,15 @@ public class AccountResource {
         }
     }
 
-    /**
-     * POST   /account/reset_password/finish : Finish to reset the password of the user
-     *
-     * @param keyAndPassword the generated key and the new password
-     * @return the ResponseEntity with status 200 (OK) if the password has been reset,
-     * or status 400 (Bad Request) or 500 (Internal Server Error) if the password could not be reset
-     */
-    @PostMapping(path = "/account/reset_password/finish",
-        produces = MediaType.TEXT_PLAIN_VALUE)
     @Timed
-    public ResponseEntity<String> finishPasswordReset(@RequestBody KeyAndPasswordVM keyAndPassword) {
-        if (!checkPasswordLength(keyAndPassword.getNewPassword())) {
-            return new ResponseEntity<>("Incorrect password", HttpStatus.BAD_REQUEST);
+    @PostMapping(path = "/account/reset_password/finish", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
+    public ResponseEntity<?> finishPasswordReset(@Valid @RequestBody KeyAndPasswordVM keyAndPassword) {
+        try {
+            accountService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (ValidResetKeyNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return userService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey())
-              .map(user -> new ResponseEntity<String>(HttpStatus.OK))
-              .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     private boolean checkPasswordLength(String password) {
