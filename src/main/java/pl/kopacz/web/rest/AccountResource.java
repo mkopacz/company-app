@@ -11,10 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.kopacz.domain.PersistentToken;
 import pl.kopacz.domain.User;
-import pl.kopacz.exception.EmailAlreadyExistsException;
-import pl.kopacz.exception.EmailNotRegisteredException;
-import pl.kopacz.exception.LoginAlreadyExistsException;
-import pl.kopacz.exception.ValidResetKeyNotFoundException;
+import pl.kopacz.exception.*;
 import pl.kopacz.repository.PersistentTokenRepository;
 import pl.kopacz.repository.UserRepository;
 import pl.kopacz.security.SecurityUtils;
@@ -70,18 +67,15 @@ public class AccountResource {
         }
     }
 
-    /**
-     * GET  /activate : activate the registered user.
-     *
-     * @param key the activation key
-     * @return the ResponseEntity with status 200 (OK) and the activated user in body, or status 500 (Internal Server Error) if the user couldn't be activated
-     */
-    @GetMapping("/activate")
     @Timed
-    public ResponseEntity<String> activateAccount(@RequestParam(value = "key") String key) {
-        return userService.activateRegistration(key)
-            .map(user -> new ResponseEntity<String>(HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+    @GetMapping("/activate")
+    public ResponseEntity<?> activateAccount(@RequestParam(value = "key") String key) {
+        try {
+            accountService.activateAccount(key);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (ActivationKeyNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**

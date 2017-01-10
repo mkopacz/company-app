@@ -41,19 +41,6 @@ public class UserService {
     @Inject
     private AuthorityRepository authorityRepository;
 
-    public Optional<User> activateRegistration(String key) {
-        log.debug("Activating user for activation key {}", key);
-        return userRepository.findOneByActivationKey(key)
-            .map(user -> {
-                // activate given user for the registration key.
-                user.setActivated(true);
-                user.setActivationKey(null);
-                userRepository.save(user);
-                log.debug("Activated user: {}", user);
-                return user;
-            });
-    }
-
     public User createUser(ManagedUserVM managedUserVM) {
         User user = new User();
         user.setLogin(managedUserVM.getLogin());

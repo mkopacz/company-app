@@ -8,10 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.kopacz.config.JHipsterProperties;
 import pl.kopacz.domain.Authority;
 import pl.kopacz.domain.User;
-import pl.kopacz.exception.EmailAlreadyExistsException;
-import pl.kopacz.exception.EmailNotRegisteredException;
-import pl.kopacz.exception.LoginAlreadyExistsException;
-import pl.kopacz.exception.ValidResetKeyNotFoundException;
+import pl.kopacz.exception.*;
 import pl.kopacz.repository.AuthorityRepository;
 import pl.kopacz.repository.UserRepository;
 import pl.kopacz.security.AuthoritiesConstants;
@@ -53,6 +50,13 @@ public class AccountService {
             User newUser = createUser(managedUserVM);
             sendActivationEmails(newUser);
         }
+    }
+
+    public void activateAccount(String key) throws ActivationKeyNotFoundException {
+        User user = userRepository.findOneByActivationKey(key)
+            .orElseThrow(() -> new ActivationKeyNotFoundException());
+
+        activate(user);
     }
 
     public void requestPasswordReset(String mail) throws EmailNotRegisteredException {
@@ -101,7 +105,6 @@ public class AccountService {
         newUser.setAuthorities(authorities);
 
         userRepository.save(newUser);
-        log.debug("Created Information for User: {}", newUser);
         return newUser;
     }
 
@@ -129,6 +132,12 @@ public class AccountService {
         user.setPassword(encodedPassword);
         user.setResetKey(null);
         user.setResetDate(null);
+        userRepository.save(user);
+    }
+
+    private void activate(User user) {
+        user.setActivated(true);
+        user.setActivationKey(null);
         userRepository.save(user);
     }
 
