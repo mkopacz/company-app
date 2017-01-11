@@ -12,6 +12,7 @@ import pl.kopacz.exception.*;
 import pl.kopacz.repository.AuthorityRepository;
 import pl.kopacz.repository.UserRepository;
 import pl.kopacz.security.AuthoritiesConstants;
+import pl.kopacz.security.SecurityUtils;
 import pl.kopacz.service.util.RandomUtil;
 import pl.kopacz.web.rest.vm.ManagedUserVM;
 
@@ -73,7 +74,16 @@ public class AccountService {
             .filter(User::isResetKeyValid)
             .orElseThrow(() -> new ValidResetKeyNotFoundException());
 
-        changePassword(user, newPassword);
+        resetPassword(user, newPassword);
+    }
+
+    public void changePassword(String newPassword) {
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin();
+        userRepository.findOneByLogin(currentUserLogin).ifPresent(user -> {
+            String encryptedPassword = passwordEncoder.encode(newPassword);
+            user.setPassword(encryptedPassword);
+            userRepository.save(user);
+        });
     }
 
     private boolean checkIfLoginExists(ManagedUserVM managedUserVM) {
@@ -116,6 +126,12 @@ public class AccountService {
         );
     }
 
+    private void activate(User user) {
+        user.setActivated(true);
+        user.setActivationKey(null);
+        userRepository.save(user);
+    }
+
     private void initResetKey(User user) {
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(ZonedDateTime.now());
@@ -127,17 +143,11 @@ public class AccountService {
         mailService.sendPasswordResetMail(user, baseUrl);
     }
 
-    private void changePassword(User user, String newPassword) {
+    private void resetPassword(User user, String newPassword) {
         String encodedPassword = passwordEncoder.encode(newPassword);
         user.setPassword(encodedPassword);
         user.setResetKey(null);
         user.setResetDate(null);
-        userRepository.save(user);
-    }
-
-    private void activate(User user) {
-        user.setActivated(true);
-        user.setActivationKey(null);
         userRepository.save(user);
     }
 

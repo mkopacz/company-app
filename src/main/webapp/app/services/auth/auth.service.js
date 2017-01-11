@@ -79,11 +79,12 @@
         function changePassword (newPassword, callback) {
             var cb = callback || angular.noop;
 
-            return Password.save(newPassword, function () {
-                return cb();
-            }, function (err) {
-                return cb(err);
-            }).$promise;
+            return Password.save(newPassword,
+                function () {
+                    return cb();
+                }, function (err) {
+                    return cb(err);
+                }).$promise;
         }
 
         function createAccount (account, callback) {
