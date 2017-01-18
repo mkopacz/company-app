@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.kopacz.domain.PersistentToken;
-import pl.kopacz.domain.User;
 import pl.kopacz.exception.*;
 import pl.kopacz.repository.PersistentTokenRepository;
 import pl.kopacz.repository.UserRepository;
@@ -104,27 +103,19 @@ public class AccountResource {
             .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    /**
-     * POST  /account : update the current user information.
-     *
-     * @param userDTO the current user information
-     * @return the ResponseEntity with status 200 (OK), or status 400 (Bad Request) or 500 (Internal Server Error) if the user couldn't be updated
-     */
-    @PostMapping("/account")
     @Timed
-    public ResponseEntity<String> saveAccount(@Valid @RequestBody UserDTO userDTO) {
-        Optional<User> existingUser = userRepository.findOneByEmail(userDTO.getEmail());
-        if (existingUser.isPresent() && (!existingUser.get().getLogin().equalsIgnoreCase(userDTO.getLogin()))) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("user-management", "emailexists", "Email already in use")).body(null);
+    @PostMapping("/account")
+    public ResponseEntity<?> saveAccount(@Valid @RequestBody UserDTO userDTO) {
+        try {
+            accountService.changeSettings(userDTO);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (EmailAlreadyExistsException e) {
+            HttpHeaders failureAlert = HeaderUtil.createFailureAlert(
+                "user-management", "emailexists", "E-mail jest zajęty.");
+            return ResponseEntity.badRequest()
+                .headers(failureAlert)
+                .body(null);
         }
-        return userRepository
-            .findOneByLogin(SecurityUtils.getCurrentUserLogin())
-            .map(u -> {
-                userService.updateUser(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(),
-                    userDTO.getLangKey());
-                return new ResponseEntity<String>(HttpStatus.OK);
-            })
-            .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @Timed

@@ -69,17 +69,6 @@ public class UserService {
         return user;
     }
 
-    public void updateUser(String firstName, String lastName, String email, String langKey) {
-        userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).ifPresent(u -> {
-            u.setFirstName(firstName);
-            u.setLastName(lastName);
-            u.setEmail(email);
-            u.setLangKey(langKey);
-            userRepository.save(u);
-            log.debug("Changed Information for User: {}", u);
-        });
-    }
-
     public void updateUser(Long id, String login, String firstName, String lastName, String email,
         boolean activated, String langKey, Set<String> authorities) {
 

@@ -13,6 +13,7 @@ import pl.kopacz.repository.AuthorityRepository;
 import pl.kopacz.repository.UserRepository;
 import pl.kopacz.security.AuthoritiesConstants;
 import pl.kopacz.security.SecurityUtils;
+import pl.kopacz.service.dto.UserDTO;
 import pl.kopacz.service.util.RandomUtil;
 import pl.kopacz.web.rest.vm.ManagedUserVM;
 
@@ -86,6 +87,20 @@ public class AccountService {
         });
     }
 
+    public void changeSettings(UserDTO userDTO) throws EmailAlreadyExistsException {
+        if (!isEmailAvailable(userDTO)) {
+            throw new EmailAlreadyExistsException();
+        }
+
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin();
+        userRepository.findOneByLogin(currentUserLogin).ifPresent(user -> {
+            user.setFirstName(userDTO.getFirstName());
+            user.setLastName(userDTO.getLastName());
+            user.setEmail(userDTO.getEmail());
+            userRepository.save(user);
+        });
+    }
+
     private boolean checkIfLoginExists(ManagedUserVM managedUserVM) {
         return userRepository.findOneByLogin(managedUserVM.getLogin()).isPresent();
     }
@@ -149,6 +164,13 @@ public class AccountService {
         user.setResetKey(null);
         user.setResetDate(null);
         userRepository.save(user);
+    }
+
+    private boolean isEmailAvailable(UserDTO userDTO) {
+        boolean foundEmail = userRepository.findOneByEmail(userDTO.getEmail())
+            .filter(user -> !user.getLogin().equalsIgnoreCase(userDTO.getLogin()))
+            .isPresent();
+        return !foundEmail;
     }
 
 }

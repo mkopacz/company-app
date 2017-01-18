@@ -159,7 +159,7 @@
                 },
                 function (err) {
                     return cb(err);
-                }.bind(this)).$promise;
+                }).$promise;
         }
 
         function getPreviousState() {
