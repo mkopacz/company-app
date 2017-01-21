@@ -11,7 +11,7 @@
 
     <groupId>pl.kopacz</groupId>
     <artifactId>company-app</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
     <packaging>war</packaging>
     <name>Company App</name>
 
