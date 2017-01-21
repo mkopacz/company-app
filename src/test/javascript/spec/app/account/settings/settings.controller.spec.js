@@ -29,14 +29,12 @@ describe('Controller Tests', function() {
         it('should send the current identity upon save', function() {
             //GIVEN
             var accountValues = {
+                login: "john",
                 firstName: "John",
                 lastName: "Doe",
-
-                activated: true,
-                email: "john.doe@mail.com",
-                langKey: "en",
-                login: "john"
+                email: "john.doe@mail.com"
             };
+            
             MockPrincipal.identity.and.returnValue($q.resolve(accountValues));
             MockAuth.updateAccount.and.returnValue($q.resolve());
             $scope.$apply(createController);
@@ -64,8 +62,7 @@ describe('Controller Tests', function() {
             $scope.$apply($scope.vm.save);
 
             //THEN
-            expect($scope.vm.error).toBeNull();
-            expect($scope.vm.success).toBe('OK');
+            expect($scope.vm.success).toEqual(true);
         });
 
         it('should notify of error upon failed save', function() {
@@ -78,8 +75,7 @@ describe('Controller Tests', function() {
             $scope.$apply($scope.vm.save);
 
             //THEN
-            expect($scope.vm.error).toEqual('ERROR');
-            expect($scope.vm.success).toBeNull();
+            expect($scope.vm.success).toEqual(false);
         });
     });
 });

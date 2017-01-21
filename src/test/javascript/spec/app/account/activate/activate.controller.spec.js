@@ -40,24 +40,24 @@ describe('Controller Tests', function() {
             });
         });
 
-        it('should set set success to OK upon successful activation', function() {
+        it('should set set success to true upon successful activation', function() {
             // given
             MockAuth.activateAccount.and.returnValue($q.resolve());
             // when
             $scope.$apply(createController);
             // then
-            expect($scope.vm.error).toBe(null);
-            expect($scope.vm.success).toEqual('OK');
+            expect($scope.vm.error).toEqual(false);
+            expect($scope.vm.success).toEqual(true);
         });
 
-        it('should set set error to ERROR upon activation failure', function() {
+        it('should set set error to true upon activation failure', function() {
             // given
             MockAuth.activateAccount.and.returnValue($q.reject());
             // when
             $scope.$apply(createController);
             // then
-            expect($scope.vm.error).toBe('ERROR');
-            expect($scope.vm.success).toEqual(null);
+            expect($scope.vm.error).toEqual(true);
+            expect($scope.vm.success).toEqual(false);
         });
     });
 });

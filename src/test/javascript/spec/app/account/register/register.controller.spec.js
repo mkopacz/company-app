@@ -36,12 +36,12 @@ describe('Controller Tests', function() {
             // when
             $scope.vm.register();
             // then
-            expect($scope.vm.doNotMatch).toEqual('ERROR');
+            expect($scope.vm.doNotMatch).toEqual(true);
         });
 
-        it('should update success to OK after creating an account', function() {
+        it('should update success to true after creating an account', function() {
             // given
-            
+
             MockAuth.createAccount.and.returnValue($q.resolve());
             createController();
             $scope.vm.registerAccount.password = $scope.vm.confirmPassword = 'password';
@@ -50,14 +50,14 @@ describe('Controller Tests', function() {
             // then
             expect(MockAuth.createAccount).toHaveBeenCalledWith({
                 password: 'password',
-                langKey: 'en'
+                langKey: 'pl'
             });
-            expect($scope.vm.success).toEqual('OK');
-            expect($scope.vm.registerAccount.langKey).toEqual('en');
-            
-            expect($scope.vm.errorUserExists).toBeNull();
-            expect($scope.vm.errorEmailExists).toBeNull();
-            expect($scope.vm.error).toBeNull();
+
+            expect($scope.vm.success).toEqual(true);
+            expect($scope.vm.registerAccount.langKey).toEqual('pl');
+            expect($scope.vm.errorUserExists).toEqual(false);
+            expect($scope.vm.errorEmailExists).toEqual(false);
+            expect($scope.vm.error).toEqual(false);
         });
 
         it('should notify of user existence upon 400/login already in use', function() {
@@ -71,9 +71,9 @@ describe('Controller Tests', function() {
             // when
             $scope.$apply($scope.vm.register); // $q promises require an $apply
             // then
-            expect($scope.vm.errorUserExists).toEqual('ERROR');
-            expect($scope.vm.errorEmailExists).toBeNull();
-            expect($scope.vm.error).toBeNull();
+            expect($scope.vm.errorUserExists).toEqual(true);
+            expect($scope.vm.errorEmailExists).toEqual(false);
+            expect($scope.vm.error).toEqual(false);
         });
 
         it('should notify of email existence upon 400/e-mail address already in use', function() {
@@ -87,9 +87,9 @@ describe('Controller Tests', function() {
             // when
             $scope.$apply($scope.vm.register); // $q promises require an $apply
             // then
-            expect($scope.vm.errorEmailExists).toEqual('ERROR');
-            expect($scope.vm.errorUserExists).toBeNull();
-            expect($scope.vm.error).toBeNull();
+            expect($scope.vm.errorEmailExists).toEqual(true);
+            expect($scope.vm.errorUserExists).toEqual(false);
+            expect($scope.vm.error).toEqual(false);
         });
 
         it('should notify of generic error', function() {
@@ -102,9 +102,9 @@ describe('Controller Tests', function() {
             // when
             $scope.$apply($scope.vm.register); // $q promises require an $apply
             // then
-            expect($scope.vm.errorUserExists).toBeNull();
-            expect($scope.vm.errorEmailExists).toBeNull();
-            expect($scope.vm.error).toEqual('ERROR');
+            expect($scope.vm.errorUserExists).toEqual(false);
+            expect($scope.vm.errorEmailExists).toEqual(false);
+            expect($scope.vm.error).toEqual(true);
         });
 
     });

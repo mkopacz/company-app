@@ -36,9 +36,8 @@ describe('Controller Tests', function() {
             createController();
 
             // then
-            expect($scope.vm.keyMissing).toBeFalsy();
-
-            expect($scope.vm.doNotMatch).toBeNull();
+            expect($scope.vm.keyMissing).toEqual(false);
+            expect($scope.vm.doNotMatch).toEqual(false);
             expect($scope.vm.resetAccount).toEqual({});
         });
 
