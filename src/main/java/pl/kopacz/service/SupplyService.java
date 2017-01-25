@@ -6,10 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.kopacz.domain.Production;
-import pl.kopacz.domain.Spice;
-import pl.kopacz.domain.Supply;
-import pl.kopacz.domain.SupplyUsage;
+import pl.kopacz.domain.*;
+import pl.kopacz.exception.InsufficientSpiceException;
 import pl.kopacz.repository.SupplyRepository;
 import pl.kopacz.repository.SupplyUsageRepository;
 import pl.kopacz.service.dto.SupplyDTO;
@@ -63,18 +61,18 @@ public class SupplyService {
         supplyRepository.delete(id);
     }
 
-    public Set<SupplyUsage> useSupplies(Production production) {
+    public Set<SupplyUsage> useSupplies(Production production) throws InsufficientSpiceException {
         log.debug("Request to use Supplies : {}", production);
         Set<SupplyUsage> totalSupplyUsages = new HashSet<>();
 
-        production.getProductionItems().forEach(productionItem -> {
+        for (ProductionItem productionItem : production.getProductionItems()) {
             Double productAmount = productionItem.getAmount();
-            productionItem.getIngredients().forEach(ingredient -> {
+            for (Ingredient ingredient : productionItem.getIngredients()) {
                 Double spiceAmount = ingredient.getAmount() * productAmount / 100;
                 Set<SupplyUsage> supplyUsages = useSupply(ingredient.getSpice(), spiceAmount);
                 totalSupplyUsages.addAll(supplyUsages);
-            });
-        });
+            }
+        }
 
         return totalSupplyUsages;
     }
@@ -89,20 +87,24 @@ public class SupplyService {
         supplyUsageRepository.delete(supplyUsages);
     }
 
-    private Set<SupplyUsage> useSupply(Spice spice, double amount) {
+    private Set<SupplyUsage> useSupply(Spice spice, double amount) throws InsufficientSpiceException {
         Set<SupplyUsage> supplyUsages = new HashSet<>();
         List<Supply> supplies = supplyRepository.findBySpiceOrderByIdAsc(spice);
 
-        while (amount > 0) {
-            Supply supply = supplies.remove(0);
-            double amountToUse = Math.min(supply.getAmount(), amount);
+        try {
+            while (amount > 0) {
+                Supply supply = supplies.remove(0);
+                double amountToUse = Math.min(supply.getAmount(), amount);
 
-            SupplyUsage supplyUsage = new SupplyUsage();
-            supplyUsage.amount(amountToUse).supply(supply);
-            supplyUsages.add(supplyUsage);
+                SupplyUsage supplyUsage = new SupplyUsage();
+                supplyUsage.amount(amountToUse).supply(supply);
+                supplyUsages.add(supplyUsage);
 
-            supply.decreaseAmount(amountToUse);
-            amount -= amountToUse;
+                supply.decreaseAmount(amountToUse);
+                amount -= amountToUse;
+            }
+        } catch (IndexOutOfBoundsException e) {
+            throw new InsufficientSpiceException();
         }
 
         return supplyUsages;
