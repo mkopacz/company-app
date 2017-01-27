@@ -12,6 +12,7 @@ import pl.kopacz.repository.SupplyRepository;
 import pl.kopacz.repository.SupplyUsageRepository;
 import pl.kopacz.service.dto.SupplyDTO;
 import pl.kopacz.service.mapper.SupplyMapper;
+import pl.kopacz.service.util.RoundUtil;
 
 import javax.inject.Inject;
 import java.util.HashSet;
@@ -69,7 +70,8 @@ public class SupplyService {
             Double productAmount = productionItem.getAmount();
             for (Ingredient ingredient : productionItem.getIngredients()) {
                 Double spiceAmount = ingredient.getAmount() * productAmount / 100;
-                Set<SupplyUsage> supplyUsages = useSupply(ingredient.getSpice(), spiceAmount);
+                Double roundedSpiceAmount = RoundUtil.roundToNearest005(spiceAmount);
+                Set<SupplyUsage> supplyUsages = useSupply(ingredient.getSpice(), roundedSpiceAmount);
                 totalSupplyUsages.addAll(supplyUsages);
             }
         }
