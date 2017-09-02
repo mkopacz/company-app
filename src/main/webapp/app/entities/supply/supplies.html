@@ -19,20 +19,31 @@
             <thead>
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
                     <th jh-sort-by="id"><span>ID</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="serialNumber"><span>Numer partii</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="expirationDate"><span>Data ważności</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="amount"><span>Ilość</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="spiceId"><span>Przyprawa</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="serialNumber"><span> Przyprawa</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="expirationDate"><span>Ilość</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="amount"><span>Numer partii</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="spiceId"><span>Data ważności</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="supply in vm.supplies track by supply.id">
+                <tr ng-repeat-start="supplyGroup in vm.supplyGroups track by supplyGroup.spice.id"
+                    ng-click="supplyGroup.show = !supplyGroup.show">
+                    <td></td>
+                    <td>{{supplyGroup.spice.name}}</td>
+                    <td>{{supplyGroup.totalAmount | number:'3'}} kg</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    </td>
+                </tr>
+                <tr ng-repeat-end ng-repeat="supply in supplyGroup.items track by supply.id"
+                    ng-show="supplyGroup.show">
                     <td><a ui-sref="supply-detail({id:supply.id})">{{supply.id}}</a></td>
+                    <td></td>
+                    <td>{{supply.amount | number:'3'}} kg</td>
                     <td>{{supply.serialNumber}}</td>
                     <td>{{supply.expirationDate | date:'dd/MM/yyyy'}}</td>
-                    <td>{{supply.amount | number:'3'}}</td>
-                    <td>{{supply.spice.name}}</td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"

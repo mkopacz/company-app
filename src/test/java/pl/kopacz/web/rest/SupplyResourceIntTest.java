@@ -197,10 +197,10 @@ public class SupplyResourceIntTest {
         restSupplyMockMvc.perform(get("/api/supplies?sort=id,desc"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(supply.getId().intValue())))
-                .andExpect(jsonPath("$.[*].serialNumber").value(hasItem(DEFAULT_SERIAL_NUMBER.toString())))
-                .andExpect(jsonPath("$.[*].expirationDate").value(hasItem(DEFAULT_EXPIRATION_DATE.toString())))
-                .andExpect(jsonPath("$.[*].amount").value(hasItem(DEFAULT_AMOUNT.doubleValue())));
+                .andExpect(jsonPath("$.[*].items.[*].id").value(hasItem(supply.getId().intValue())))
+                .andExpect(jsonPath("$.[*].items.[*].serialNumber").value(hasItem(DEFAULT_SERIAL_NUMBER.toString())))
+                .andExpect(jsonPath("$.[*].items.[*].expirationDate").value(hasItem(DEFAULT_EXPIRATION_DATE.toString())))
+                .andExpect(jsonPath("$.[*].items.[*].amount").value(hasItem(DEFAULT_AMOUNT.doubleValue())));
     }
 
     @Test
