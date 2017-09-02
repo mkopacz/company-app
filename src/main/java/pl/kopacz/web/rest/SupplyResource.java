@@ -91,7 +91,9 @@ public class SupplyResource {
         log.debug("REST request to get a page of Supplies");
         Page<SupplyDTO> page = supplyService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/supplies");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        List<SupplyDTO> supplies = page.getContent().stream()
+            .filter(supplyDTO -> supplyDTO.getAmount() > 0).collect(Collectors.toList());
+        return new ResponseEntity<>(supplies, headers, HttpStatus.OK);
     }
 
     /**
