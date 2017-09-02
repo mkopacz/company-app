@@ -11,7 +11,7 @@
         <dt><span>Składniki</span></dt>
         <dd>
             <div style="display: table-row" ng-repeat="ingredient in vm.product.ingredients">
-                <div style="display: table-cell; padding-right: 20px">{{ingredient.amount}} kg</div>
+                <div style="display: table-cell; padding-right: 20px">{{ingredient.amount | number:'3'}} kg</div>
                 <div style="display: table-cell">{{ingredient.spice.name}}</div>
             </div>
         </dd>

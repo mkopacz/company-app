@@ -10,11 +10,11 @@
         </dd>
         <dt><span>Data ważności</span></dt>
         <dd>
-            <span>{{vm.supply.expirationDate | date:'shortDate'}}</span>
+            <span>{{vm.supply.expirationDate | date:'dd/MM/yyyy'}}</span>
         </dd>
         <dt><span>Ilość</span></dt>
         <dd>
-            <span>{{vm.supply.amount}}</span>
+            <span>{{vm.supply.amount | number:'3'}}</span>
         </dd>
         <dt><span>Przyprawa</span></dt>
         <dd>

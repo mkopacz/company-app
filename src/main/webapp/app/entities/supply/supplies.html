@@ -30,8 +30,8 @@
                 <tr ng-repeat="supply in vm.supplies track by supply.id">
                     <td><a ui-sref="supply-detail({id:supply.id})">{{supply.id}}</a></td>
                     <td>{{supply.serialNumber}}</td>
-                    <td>{{supply.expirationDate | date:'shortDate'}}</td>
-                    <td>{{supply.amount}}</td>
+                    <td>{{supply.expirationDate | date:'dd/MM/yyyy'}}</td>
+                    <td>{{supply.amount | number:'3'}}</td>
                     <td>{{supply.spice.name}}</td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">

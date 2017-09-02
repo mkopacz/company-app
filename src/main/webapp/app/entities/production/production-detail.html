@@ -6,12 +6,12 @@
     <dl class="dl-horizontal jh-entity-details">
         <dt><span>Data</span></dt>
         <dd>
-            <span>{{vm.production.date | date:'shortDate'}}</span>
+            <span>{{vm.production.date | date:'dd/MM/yyyy'}}</span>
         </dd>
         <dt><span>Produkty</span></dt>
         <dd>
             <div style="display: table-row" ng-repeat="productionItem in vm.production.productionItems">
-                <div style="display: table-cell; padding-right: 20px">{{productionItem.amount}} kg</div>
+                <div style="display: table-cell; padding-right: 20px">{{productionItem.amount | number:'2'}} kg</div>
                 <div style="display: table-cell">{{productionItem.product.name}}</div>
             </div>
         </dd>
