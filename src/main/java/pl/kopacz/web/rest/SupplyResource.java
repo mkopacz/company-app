@@ -1,10 +1,6 @@
 package pl.kopacz.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import pl.kopacz.service.SupplyService;
-import pl.kopacz.web.rest.util.HeaderUtil;
-import pl.kopacz.web.rest.util.PaginationUtil;
-import pl.kopacz.service.dto.SupplyDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -13,15 +9,24 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.kopacz.service.SupplyService;
+import pl.kopacz.service.dto.SpiceDTO;
+import pl.kopacz.service.dto.SupplyDTO;
+import pl.kopacz.service.dto.SupplyGroupDTO;
+import pl.kopacz.service.dto.SupplyGroupItemDTO;
+import pl.kopacz.web.rest.util.HeaderUtil;
+import pl.kopacz.web.rest.util.PaginationUtil;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Set;
+
+import static java.util.stream.Collectors.*;
 
 /**
  * REST controller for managing Supply.
@@ -86,12 +91,22 @@ public class SupplyResource {
      */
     @GetMapping("/supplies")
     @Timed
-    public ResponseEntity<List<SupplyDTO>> getAllSupplies(Pageable pageable)
-        throws URISyntaxException {
+    public ResponseEntity<List<SupplyGroupDTO>> getAllSupplies(Pageable pageable) throws URISyntaxException {
         log.debug("REST request to get a page of Supplies");
         Page<SupplyDTO> page = supplyService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/supplies");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        List<SupplyGroupDTO> supplyGroups = groupSupplies(page.getContent());
+        return new ResponseEntity<>(supplyGroups, headers, HttpStatus.OK);
+    }
+
+    private List<SupplyGroupDTO> groupSupplies(List<SupplyDTO> supplies) {
+        Map<SpiceDTO, Set<SupplyGroupItemDTO>> spicesToSupplies = supplies.stream()
+            .filter(supply -> supply.getAmount() > 0)
+            .collect(groupingBy(SupplyDTO::getSpice, mapping(SupplyGroupItemDTO::fromSupplyDTO, toSet())));
+        return spicesToSupplies.entrySet().stream()
+            .map(spiceAndSupplies ->
+                SupplyGroupDTO.fromSpiceAndSupplies(spiceAndSupplies.getKey(), spiceAndSupplies.getValue())
+            ).collect(toList());
     }
 
     /**
