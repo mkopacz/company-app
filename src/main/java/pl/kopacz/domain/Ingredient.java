@@ -57,6 +57,10 @@ public class Ingredient implements Serializable {
         this.spice = spice;
     }
 
+    public String getSpiceName() {
+        return spice.getName();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

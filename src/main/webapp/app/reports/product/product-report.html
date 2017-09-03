@@ -1,0 +1,68 @@
+<div>
+    <h2>Raporty</h2>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-6 no-padding-left">
+                <form name="reportForm" role="form" novalidate ng-submit="vm.loadReport()">
+                    <div class="form-group">
+                        <label for="field_product">Wybierz produkt</label>
+                        <select class="form-control" id="field_product" ng-model="vm.productId"
+                                ng-options="product.id as product.name for product in vm.products | orderBy:'id'" required>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary"
+                            ng-disabled="reportForm.$invalid || vm.isLoading">
+                        Pokaż raport
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <br/>
+
+    <div class="table-responsive" style="overflow-x: auto; white-space: nowrap;">
+        <table class="jh-table table table-striped" ng-if="vm.reports.length">
+            <thead>
+                <tr>
+                    <th rowspan="2">Data</th>
+                    <th rowspan="2">Ilość</th>
+                    <th colspan="3" ng-repeat="spice in vm.reports[0].spices | orderBy:'spiceName'">
+                        {{spice.spiceName}}
+                    </th>
+                </tr>
+                <tr>
+                    <th ng-repeat-start="spice in vm.reports[0].spices | orderBy:'spiceName'">
+                        Receptura
+                    </th>
+                    <th>Wydano</th>
+                    <th ng-repeat-end>Nr partii</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="report in vm.reports | orderBy:'date'">
+                    <td>{{report.date | date:'dd/MM/yyyy'}}</a></td>
+                    <td>{{report.amount | number:'2'}} kg</td>
+                    <td ng-repeat-start="spice in report.spices | orderBy:'spiceName'">
+                        {{spice.recipieAmount | number:'3'}} kg
+                    </td>
+                    <td>{{spice.usedAmount | number:'3'}} kg</td>
+                    <td ng-repeat-end>
+                        <div ng-repeat="usage in spice.usages | orderBy:'serialNumber'">
+                            {{usage.spiceAmount | number:'3'}} kg {{usage.serialNumber}}
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container-fluid" ng-if="!vm.reports.length">
+        <div class="row">
+            <div class="col-md-12" style="text-align: center;">
+                Brak danych
+            </div>
+        </div>
+    </div>
+</div>

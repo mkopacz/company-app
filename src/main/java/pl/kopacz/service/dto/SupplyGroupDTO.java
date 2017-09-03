@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import static java.util.stream.Collectors.summarizingDouble;
-
 public class SupplyGroupDTO implements Serializable {
 
     private SpiceDTO spice;
@@ -44,8 +42,8 @@ public class SupplyGroupDTO implements Serializable {
         supplyGroup.spice = spiceDTO;
         supplyGroup.items = items;
         supplyGroup.totalAmount = items.stream()
-            .collect(summarizingDouble(SupplyGroupItemDTO::getAmount))
-            .getSum();
+            .mapToDouble(SupplyGroupItemDTO::getAmount)
+            .sum();
         return supplyGroup;
     }
 

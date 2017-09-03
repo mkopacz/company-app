@@ -74,6 +74,14 @@ public class SupplyUsage implements Serializable {
         this.production = production;
     }
 
+    public Spice getSupplySpice() {
+        return supply.getSpice();
+    }
+
+    public String getSupplySerialNumber() {
+        return supply.getSerialNumber();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
