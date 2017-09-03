@@ -1,24 +1,23 @@
 package pl.kopacz.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import pl.kopacz.service.ProductionService;
-import pl.kopacz.web.rest.util.HeaderUtil;
-import pl.kopacz.service.dto.ProductionDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.kopacz.exception.InsufficientSpiceException;
+import pl.kopacz.service.ProductionService;
+import pl.kopacz.service.dto.ProductionDTO;
+import pl.kopacz.web.rest.util.HeaderUtil;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Production.
@@ -28,7 +27,7 @@ import java.util.stream.Collectors;
 public class ProductionResource {
 
     private final Logger log = LoggerFactory.getLogger(ProductionResource.class);
-        
+
     @Inject
     private ProductionService productionService;
 
@@ -41,7 +40,9 @@ public class ProductionResource {
      */
     @PostMapping("/productions")
     @Timed
-    public ResponseEntity<ProductionDTO> createProduction(@Valid @RequestBody ProductionDTO productionDTO) throws URISyntaxException {
+    public ResponseEntity<ProductionDTO> createProduction(@Valid @RequestBody ProductionDTO productionDTO)
+        throws URISyntaxException, InsufficientSpiceException {
+
         log.debug("REST request to save Production : {}", productionDTO);
         if (productionDTO.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("production", "idexists", "A new production cannot already have an ID")).body(null);
@@ -63,7 +64,9 @@ public class ProductionResource {
      */
     @PutMapping("/productions")
     @Timed
-    public ResponseEntity<ProductionDTO> updateProduction(@Valid @RequestBody ProductionDTO productionDTO) throws URISyntaxException {
+    public ResponseEntity<ProductionDTO> updateProduction(@Valid @RequestBody ProductionDTO productionDTO)
+        throws URISyntaxException, InsufficientSpiceException {
+
         log.debug("REST request to update Production : {}", productionDTO);
         if (productionDTO.getId() == null) {
             return createProduction(productionDTO);
@@ -116,6 +119,13 @@ public class ProductionResource {
         log.debug("REST request to delete Production : {}", id);
         productionService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("production", id.toString())).build();
+    }
+
+    @ExceptionHandler(InsufficientSpiceException.class)
+    private ResponseEntity<String> handleInsufficientSpiceException() {
+        return ResponseEntity.badRequest()
+            .contentType(MediaType.TEXT_PLAIN)
+            .body("Brak przypraw dla tej produkcji.");
     }
 
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kopacz.domain.Production;
 import pl.kopacz.domain.SupplyUsage;
+import pl.kopacz.exception.InsufficientSpiceException;
 import pl.kopacz.repository.ProductionRepository;
 import pl.kopacz.service.dto.ProductionDTO;
 import pl.kopacz.service.mapper.ProductionMapper;
@@ -31,7 +32,7 @@ public class ProductionService {
     @Inject
     private SupplyService supplyService;
 
-    public ProductionDTO save(ProductionDTO productionDTO) {
+    public ProductionDTO save(ProductionDTO productionDTO) throws InsufficientSpiceException {
         log.debug("Request to save Production : {}", productionDTO);
         Production production = productionMapper.productionDTOToProduction(productionDTO);
         if (production.getId() != null) {
