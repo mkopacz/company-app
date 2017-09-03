@@ -36,9 +36,9 @@ describe('Controller Tests', function() {
             createController();
 
             // then
-            expect($scope.vm.success).toBeNull();
-            expect($scope.vm.error).toBeNull();
-            expect($scope.vm.errorEmailNotExists).toBeNull();
+            expect($scope.vm.success).toEqual(false);
+            expect($scope.vm.error).toEqual(false);
+            expect($scope.vm.errorEmailNotExists).toEqual(false);
             expect($scope.vm.resetAccount).toEqual({});
         });
 
@@ -67,10 +67,11 @@ describe('Controller Tests', function() {
             $scope.$apply($scope.vm.requestReset);
             // then
             expect(MockAuth.resetPasswordInit).toHaveBeenCalledWith('user@domain.com');
-            expect($scope.vm.success).toEqual('OK');
-            expect($scope.vm.error).toBeNull();
-            expect($scope.vm.errorEmailNotExists).toBeNull();
+            expect($scope.vm.success).toEqual(true);
+            expect($scope.vm.error).toEqual(false);
+            expect($scope.vm.errorEmailNotExists).toEqual(false);
         });
+
         it('notifies of unknown email upon e-mail address not registered/400', function() {
             // given
             MockAuth.resetPasswordInit.and.returnValue($q.reject({
@@ -83,9 +84,9 @@ describe('Controller Tests', function() {
             $scope.$apply($scope.vm.requestReset);
             // then
             expect(MockAuth.resetPasswordInit).toHaveBeenCalledWith('user@domain.com');
-            expect($scope.vm.success).toBeNull();
-            expect($scope.vm.error).toBeNull();
-            expect($scope.vm.errorEmailNotExists).toEqual('ERROR');
+            expect($scope.vm.success).toEqual(false);
+            expect($scope.vm.error).toEqual(false);
+            expect($scope.vm.errorEmailNotExists).toEqual(true);
         });
 
         it('notifies of error upon error response', function() {
@@ -100,9 +101,9 @@ describe('Controller Tests', function() {
             $scope.$apply($scope.vm.requestReset);
             // then
             expect(MockAuth.resetPasswordInit).toHaveBeenCalledWith('user@domain.com');
-            expect($scope.vm.success).toBeNull();
-            expect($scope.vm.errorEmailNotExists).toBeNull();
-            expect($scope.vm.error).toEqual('ERROR');
+            expect($scope.vm.success).toEqual(false);
+            expect($scope.vm.errorEmailNotExists).toEqual(false);
+            expect($scope.vm.error).toEqual(true);
         });
 
     });

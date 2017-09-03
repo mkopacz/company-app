@@ -1,16 +1,5 @@
 package pl.kopacz.web.rest;
 
-import pl.kopacz.CompanyApp;
-import pl.kopacz.config.JHipsterProperties;
-import pl.kopacz.domain.Authority;
-import pl.kopacz.domain.User;
-import pl.kopacz.repository.AuthorityRepository;
-import pl.kopacz.repository.UserRepository;
-import pl.kopacz.security.AuthoritiesConstants;
-import pl.kopacz.service.MailService;
-import pl.kopacz.service.UserService;
-import pl.kopacz.service.dto.UserDTO;
-import pl.kopacz.web.rest.vm.ManagedUserVM;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,10 +11,24 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import pl.kopacz.CompanyApp;
+import pl.kopacz.domain.Authority;
+import pl.kopacz.domain.User;
+import pl.kopacz.repository.AuthorityRepository;
+import pl.kopacz.repository.UserRepository;
+import pl.kopacz.security.AuthoritiesConstants;
+import pl.kopacz.service.AccountService;
+import pl.kopacz.service.MailService;
+import pl.kopacz.service.UserService;
+import pl.kopacz.service.dto.UserDTO;
+import pl.kopacz.web.rest.vm.ManagedUserVM;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyObject;
@@ -46,9 +49,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AccountResourceIntTest {
 
     @Inject
-    private JHipsterProperties jHipsterProperties;
-
-    @Inject
     private UserRepository userRepository;
 
     @Inject
@@ -63,6 +63,9 @@ public class AccountResourceIntTest {
     @Mock
     private MailService mockMailService;
 
+    @Inject
+    private AccountService accountService;
+
     private MockMvc restUserMockMvc;
 
     private MockMvc restMvc;
@@ -70,18 +73,18 @@ public class AccountResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        doNothing().when(mockMailService).sendActivationEmail((User) anyObject(), anyString());
+        doNothing().when(mockMailService).sendActivationEmail(anyObject(), anyObject(), anyString());
+
+        ReflectionTestUtils.setField(accountService, "mailService", mockMailService);
 
         AccountResource accountResource = new AccountResource();
-        ReflectionTestUtils.setField(accountResource, "jHipsterProperties", jHipsterProperties);
         ReflectionTestUtils.setField(accountResource, "userRepository", userRepository);
         ReflectionTestUtils.setField(accountResource, "userService", userService);
-        ReflectionTestUtils.setField(accountResource, "mailService", mockMailService);
+        ReflectionTestUtils.setField(accountResource, "accountService", accountService);
 
         AccountResource accountUserMockResource = new AccountResource();
         ReflectionTestUtils.setField(accountUserMockResource, "userRepository", userRepository);
         ReflectionTestUtils.setField(accountUserMockResource, "userService", mockUserService);
-        ReflectionTestUtils.setField(accountUserMockResource, "mailService", mockMailService);
 
         this.restMvc = MockMvcBuilders.standaloneSetup(accountResource).build();
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(accountUserMockResource).build();

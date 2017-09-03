@@ -1,0 +1,35 @@
+
+<div>
+    <h2><span>Zasób</span> {{vm.supply.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span>Numer partii</span></dt>
+        <dd>
+            <span>{{vm.supply.serialNumber}}</span>
+        </dd>
+        <dt><span>Data ważności</span></dt>
+        <dd>
+            <span>{{vm.supply.expirationDate | date:'shortDate'}}</span>
+        </dd>
+        <dt><span>Ilość</span></dt>
+        <dd>
+            <span>{{vm.supply.amount}}</span>
+        </dd>
+        <dt><span>Przyprawa</span></dt>
+        <dd>
+            <span>{{vm.supply.spice.name}}</span>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Wstecz</span>
+    </button>
+
+    <button type="button" ui-sref="supply-detail.edit({id:vm.supply.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-xs hidden-sm"> Edytuj</span>
+    </button>
+</div>

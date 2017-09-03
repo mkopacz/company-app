@@ -33,10 +33,11 @@ describe('Controller Tests', function() {
             //WHEN
             $scope.vm.changePassword();
             //THEN
-            expect($scope.vm.doNotMatch).toBe('ERROR');
-            expect($scope.vm.error).toBeNull();
-            expect($scope.vm.success).toBeNull();
+            expect($scope.vm.doNotMatch).toEqual(true);
+            expect($scope.vm.error).toEqual(false);
+            expect($scope.vm.success).toEqual(false);
         });
+
         it('should call Auth.changePassword when passwords match', function() {
             //GIVEN
             MockAuth.changePassword.and.returnValue($q.resolve());
@@ -50,7 +51,7 @@ describe('Controller Tests', function() {
             expect(MockAuth.changePassword).toHaveBeenCalledWith('myPassword');
         });
 
-        it('should set success to OK upon success', function() {
+        it('should set success to true upon success', function() {
             //GIVEN
             MockAuth.changePassword.and.returnValue($q.resolve());
             createController();
@@ -60,9 +61,9 @@ describe('Controller Tests', function() {
             $scope.$apply($scope.vm.changePassword);
 
             //THEN
-            expect($scope.vm.doNotMatch).toBeNull();
-            expect($scope.vm.error).toBeNull();
-            expect($scope.vm.success).toBe('OK');
+            expect($scope.vm.doNotMatch).toEqual(false);
+            expect($scope.vm.error).toEqual(false);
+            expect($scope.vm.success).toEqual(true);
         });
 
         it('should notify of error if change password fails', function() {
@@ -75,9 +76,9 @@ describe('Controller Tests', function() {
             $scope.$apply($scope.vm.changePassword);
 
             //THEN
-            expect($scope.vm.doNotMatch).toBeNull();
-            expect($scope.vm.success).toBeNull();
-            expect($scope.vm.error).toBe('ERROR');
+            expect($scope.vm.doNotMatch).toEqual(false);
+            expect($scope.vm.success).toEqual(false);
+            expect($scope.vm.error).toEqual(true);
         });
     });
 });

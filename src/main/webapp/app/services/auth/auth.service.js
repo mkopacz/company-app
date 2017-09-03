@@ -34,7 +34,7 @@
                 },
                 function (err) {
                     return cb(err);
-                }.bind(this)).$promise;
+                }).$promise;
         }
 
         function authorize (force) {
@@ -79,11 +79,12 @@
         function changePassword (newPassword, callback) {
             var cb = callback || angular.noop;
 
-            return Password.save(newPassword, function () {
-                return cb();
-            }, function (err) {
-                return cb(err);
-            }).$promise;
+            return Password.save(newPassword,
+                function () {
+                    return cb();
+                }, function (err) {
+                    return cb(err);
+                }).$promise;
         }
 
         function createAccount (account, callback) {
@@ -130,21 +131,23 @@
         function resetPasswordFinish (keyAndPassword, callback) {
             var cb = callback || angular.noop;
 
-            return PasswordResetFinish.save(keyAndPassword, function () {
-                return cb();
-            }, function (err) {
-                return cb(err);
-            }).$promise;
+            return PasswordResetFinish.save(keyAndPassword,
+                function () {
+                    return cb();
+                }, function (err) {
+                    return cb(err);
+                }).$promise;
         }
 
         function resetPasswordInit (mail, callback) {
             var cb = callback || angular.noop;
 
-            return PasswordResetInit.save(mail, function() {
-                return cb();
-            }, function (err) {
-                return cb(err);
-            }).$promise;
+            return PasswordResetInit.save(mail,
+                function() {
+                    return cb();
+                }, function (err) {
+                    return cb(err);
+                }).$promise;
         }
 
         function updateAccount (account, callback) {
@@ -156,7 +159,7 @@
                 },
                 function (err) {
                     return cb(err);
-                }.bind(this)).$promise;
+                }).$promise;
         }
 
         function getPreviousState() {

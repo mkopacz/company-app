@@ -5,34 +5,32 @@
         .module('companyApp')
         .controller('PasswordController', PasswordController);
 
-    PasswordController.$inject = ['Auth', 'Principal'];
+    PasswordController.$inject = ['Auth'];
 
-    function PasswordController (Auth, Principal) {
+    function PasswordController (Auth) {
         var vm = this;
 
+        vm.success = false;
+
+        vm.error = false;
+        vm.doNotMatch = false;
+
         vm.changePassword = changePassword;
-        vm.doNotMatch = null;
-        vm.error = null;
-        vm.success = null;
-
-        Principal.identity().then(function(account) {
-            vm.account = account;
-        });
-
+        
         function changePassword () {
+            vm.success = false;
+            vm.error = false;
+            vm.doNotMatch = false;
+
             if (vm.password !== vm.confirmPassword) {
-                vm.error = null;
-                vm.success = null;
-                vm.doNotMatch = 'ERROR';
+                vm.doNotMatch = true;
             } else {
-                vm.doNotMatch = null;
-                Auth.changePassword(vm.password).then(function () {
-                    vm.error = null;
-                    vm.success = 'OK';
-                }).catch(function () {
-                    vm.success = null;
-                    vm.error = 'ERROR';
-                });
+                Auth.changePassword(vm.password)
+                    .then(function () {
+                        vm.success = true;
+                    }).catch(function () {
+                        vm.error = true;
+                    });
             }
         }
     }

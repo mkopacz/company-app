@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="mariusz-macbook (generated)" id="1482451853460-1">
+        <addColumn tableName="product_ingredient">
+            <column name="ingredient_id" type="int8">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="mariusz-macbook (generated)" id="1482451853460-2">
+        <addColumn tableName="product_ingredient">
+            <column name="product_id" type="int8">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="mariusz-macbook (generated)" id="1482875631841-3">
+        <addUniqueConstraint columnNames="ingredient_id" tableName="product_ingredient"/>
+    </changeSet>
+    <changeSet author="mariusz-macbook (generated)" id="1482451853460-4">
+        <addForeignKeyConstraint baseColumnNames="ingredient_id" baseTableName="product_ingredient" constraintName="FK_4752mnpwo3mtv6t0sg8x7p428" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="ingredient"/>
+    </changeSet>
+    <changeSet author="mariusz-macbook (generated)" id="1482451853460-5">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="product_ingredient" constraintName="FK_nlacfd7ww2fcxwve4bvkscbt7" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="product"/>
+    </changeSet>
+    <changeSet author="mariusz-macbook (generated)" id="1482451853460-6">
+        <dropForeignKeyConstraint baseTableName="product_ingredient" constraintName="fk_product_ingredient_ingredients_id"/>
+    </changeSet>
+    <changeSet author="mariusz-macbook (generated)" id="1482451853460-7">
+        <dropForeignKeyConstraint baseTableName="product_ingredient" constraintName="fk_product_ingredient_products_id"/>
+    </changeSet>
+    <changeSet author="mariusz-macbook (generated)" id="1482451853460-8">
+        <dropPrimaryKey tableName="product_ingredient"/>
+    </changeSet>
+    <changeSet author="mariusz-macbook (generated)" id="1482451853460-9">
+        <dropColumn columnName="ingredients_id" tableName="product_ingredient"/>
+    </changeSet>
+    <changeSet author="mariusz-macbook (generated)" id="1482451853460-10">
+        <dropColumn columnName="products_id" tableName="product_ingredient"/>
+    </changeSet>
+    <changeSet author="mariusz-macbook (generated)" id="1482451853460-11">
+        <addPrimaryKey columnNames="product_id, ingredient_id" tableName="product_ingredient"/>
+    </changeSet>
+</databaseChangeLog>

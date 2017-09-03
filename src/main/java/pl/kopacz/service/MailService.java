@@ -1,8 +1,5 @@
 package pl.kopacz.service;
 
-import pl.kopacz.config.JHipsterProperties;
-import pl.kopacz.domain.User;
-
 import org.apache.commons.lang3.CharEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,22 +10,19 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
-
+import pl.kopacz.config.JHipsterProperties;
+import pl.kopacz.domain.User;
 
 import javax.inject.Inject;
 import javax.mail.internet.MimeMessage;
 import java.util.Locale;
 
-/**
- * Service for sending e-mails.
- * <p>
- * We use the @Async annotation to send e-mails asynchronously.
- * </p>
- */
 @Service
 public class MailService {
 
     private final Logger log = LoggerFactory.getLogger(MailService.class);
+
+    private static final String ADMIN = "admin";
 
     private static final String USER = "user";
 
@@ -67,15 +61,18 @@ public class MailService {
     }
 
     @Async
-    public void sendActivationEmail(User user, String baseUrl) {
-        log.debug("Sending activation e-mail to '{}'", user.getEmail());
+    public void sendActivationEmail(User admin, User user, String baseUrl) {
+        log.debug("Sending activation e-mail to '{}'", admin.getEmail());
         Locale locale = Locale.forLanguageTag(user.getLangKey());
+
         Context context = new Context(locale);
+        context.setVariable(ADMIN, admin);
         context.setVariable(USER, user);
         context.setVariable(BASE_URL, baseUrl);
         String content = templateEngine.process("activationEmail", context);
         String subject = messageSource.getMessage("email.activation.title", null, locale);
-        sendEmail(user.getEmail(), subject, content, false, true);
+
+        sendEmail(admin.getEmail(), subject, content, false, true);
     }
 
     @Async
@@ -94,11 +91,13 @@ public class MailService {
     public void sendPasswordResetMail(User user, String baseUrl) {
         log.debug("Sending password reset e-mail to '{}'", user.getEmail());
         Locale locale = Locale.forLanguageTag(user.getLangKey());
+
         Context context = new Context(locale);
         context.setVariable(USER, user);
         context.setVariable(BASE_URL, baseUrl);
         String content = templateEngine.process("passwordResetEmail", context);
         String subject = messageSource.getMessage("email.reset.title", null, locale);
+
         sendEmail(user.getEmail(), subject, content, false, true);
     }
 }
