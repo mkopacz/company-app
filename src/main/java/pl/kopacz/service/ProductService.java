@@ -12,6 +12,7 @@ import pl.kopacz.service.dto.ProductReportDTO;
 import pl.kopacz.service.dto.ProductReportSpiceDTO;
 import pl.kopacz.service.dto.ProductReportSpiceUsageDTO;
 import pl.kopacz.service.mapper.ProductMapper;
+import pl.kopacz.service.util.RoundUtil;
 
 import javax.inject.Inject;
 import java.util.LinkedList;
@@ -106,7 +107,9 @@ public class ProductService {
 
     private Set<ProductReportSpiceDTO> buildProductReportSpices(ProductionItem productionItem) {
         Double productionItemAmount = productionItem.getAmount();
-        Set<SupplyUsage> supplyUsages = productionItem.getProductionSupplyUsages();
+        Set<SupplyUsage> supplyUsages = productionItem.getProductionSupplyUsages().stream()
+            .filter(supplyUsage -> supplyUsage.getProduct().equals(productionItem.getProduct()))
+            .collect(Collectors.toSet());
         return productionItem.getProductIngredients().stream()
             .map(ingredient -> buildProductReportSpice(ingredient, supplyUsages, productionItemAmount))
             .collect(Collectors.toSet());
@@ -116,7 +119,8 @@ public class ProductService {
                                                           Double productionItemAmount) {
         ProductReportSpiceDTO productReportSpice = new ProductReportSpiceDTO();
         productReportSpice.setSpiceName(ingredient.getSpiceName());
-        productReportSpice.setRecipieAmount(ingredient.getAmount() * productionItemAmount / 100);
+        Double recipieAmount = ingredient.getAmount() * productionItemAmount / 100;
+        productReportSpice.setRecipieAmount(RoundUtil.roundToNearest005(recipieAmount));
         productReportSpice.setUsages(buildProductReportSpiceUsages(ingredient.getSpice(), supplyUsages));
         return productReportSpice;
     }
