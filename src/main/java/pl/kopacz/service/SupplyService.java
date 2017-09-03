@@ -68,7 +68,7 @@ public class SupplyService {
 
         for (ProductionItem productionItem : production.getProductionItems()) {
             Double productAmount = productionItem.getAmount();
-            for (Ingredient ingredient : productionItem.getIngredients()) {
+            for (Ingredient ingredient : productionItem.getProductIngredients()) {
                 Double spiceAmount = ingredient.getAmount() * productAmount / 100;
                 Double roundedSpiceAmount = RoundUtil.roundToNearest005(spiceAmount);
                 Set<SupplyUsage> supplyUsages = useSupply(ingredient.getSpice(), roundedSpiceAmount);

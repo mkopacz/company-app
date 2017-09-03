@@ -1,24 +1,22 @@
 package pl.kopacz.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import pl.kopacz.service.ProductService;
-import pl.kopacz.web.rest.util.HeaderUtil;
-import pl.kopacz.service.dto.ProductDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.kopacz.service.ProductService;
+import pl.kopacz.service.dto.ProductDTO;
+import pl.kopacz.service.dto.ProductReportDTO;
+import pl.kopacz.web.rest.util.HeaderUtil;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Product.
@@ -28,7 +26,7 @@ import java.util.stream.Collectors;
 public class ProductResource {
 
     private final Logger log = LoggerFactory.getLogger(ProductResource.class);
-        
+
     @Inject
     private ProductService productService;
 
@@ -116,6 +114,14 @@ public class ProductResource {
         log.debug("REST request to delete Product : {}", id);
         productService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("product", id.toString())).build();
+    }
+
+    @GetMapping("/products/{id}/reports")
+    @Timed
+    public ResponseEntity<List<ProductReportDTO>> getProductReports(@PathVariable Long id) {
+        log.debug("REST request to get reports of Product : {}", id);
+        List<ProductReportDTO> productReports = productService.buildProductReports(id);
+        return new ResponseEntity<>(productReports, HttpStatus.OK);
     }
 
 }

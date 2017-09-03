@@ -3,6 +3,7 @@ package pl.kopacz.domain;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Set;
 
@@ -75,8 +76,16 @@ public class ProductionItem implements Serializable {
         this.production = production;
     }
 
-    public Set<Ingredient> getIngredients() {
+    public Set<Ingredient> getProductIngredients() {
         return product.getIngredients();
+    }
+
+    public LocalDate getProductionDate() {
+        return production.getDate();
+    }
+
+    public Set<SupplyUsage> getProductionSupplyUsages() {
+        return production.getSupplyUsages();
     }
 
     @Override
