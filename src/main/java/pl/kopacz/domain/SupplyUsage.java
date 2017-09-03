@@ -25,6 +25,10 @@ public class SupplyUsage implements Serializable {
 
     @NotNull
     @ManyToOne
+    private Product product;
+
+    @NotNull
+    @ManyToOne
     private Production production;
 
     public Long getId() {
@@ -59,6 +63,19 @@ public class SupplyUsage implements Serializable {
 
     public void setSupply(Supply supply) {
         this.supply = supply;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public SupplyUsage product(Product product) {
+        this.product = product;
+        return this;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public Production getProduction() {
