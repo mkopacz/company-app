@@ -25,7 +25,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="production in vm.productions track by production.id">
+                <tr ng-repeat="production in vm.productions | orderBy: 'id' track by production.id">
                     <td><a ui-sref="production-detail({id:production.id})">{{production.id}}</a></td>
                     <td>{{production.date | date:'dd/MM/yyyy'}}</td>
                     <td>

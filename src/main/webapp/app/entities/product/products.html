@@ -25,7 +25,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="product in vm.products track by product.id">
+                <tr ng-repeat="product in vm.products | orderBy: 'id' track by product.id">
                     <td><a ui-sref="product-detail({id:product.id})">{{product.id}}</a></td>
                     <td>{{product.name}}</td>
                     <td>
