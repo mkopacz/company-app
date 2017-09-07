@@ -27,7 +27,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat-start="supplyGroup in vm.supplyGroups track by supplyGroup.spice.id"
+                <tr ng-repeat-start="supplyGroup in vm.supplyGroups | orderBy: 'spice.name' track by supplyGroup.spice.id"
                     ng-click="supplyGroup.show = !supplyGroup.show">
                     <td></td>
                     <td>{{supplyGroup.spice.name}}</td>
@@ -37,8 +37,8 @@
                     <td></td>
                     </td>
                 </tr>
-                <tr ng-repeat-end ng-repeat="supply in supplyGroup.items track by supply.id"
-                    ng-show="supplyGroup.show">
+                <tr ng-repeat-end ng-repeat="supply in supplyGroup.items | orderBy: 'id' track by supply.id"
+                    ng-if="supplyGroup.show">
                     <td><a ui-sref="supply-detail({id:supply.id})">{{supply.id}}</a></td>
                     <td></td>
                     <td>{{supply.amount | number:'3'}} kg</td>

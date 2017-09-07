@@ -23,17 +23,17 @@
     <br/>
 
     <div class="table-responsive" style="overflow-x: auto; white-space: nowrap;">
-        <table class="jh-table table table-striped" ng-if="vm.reports.length">
+        <table class="jh-table table table-bordered report" ng-if="vm.reports.length">
             <thead>
                 <tr>
                     <th rowspan="2">Data</th>
                     <th rowspan="2">Ilość</th>
-                    <th colspan="3" ng-repeat="spice in vm.reports[0].spices | orderBy:'spiceName'">
+                    <th colspan="3" ng-repeat="spice in vm.reports[0].spices | orderBy:'spiceName' track by spice.spiceName">
                         {{spice.spiceName}}
                     </th>
                 </tr>
                 <tr>
-                    <th ng-repeat-start="spice in vm.reports[0].spices | orderBy:'spiceName'">
+                    <th ng-repeat-start="spice in vm.reports[0].spices | orderBy:'spiceName' track by spice.spiceName">
                         Receptura
                     </th>
                     <th>Wydano</th>
@@ -41,15 +41,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="report in vm.reports | orderBy:'date'">
+                <tr ng-repeat="report in vm.reports | orderBy:'date' track by report.date">
                     <td>{{report.date | date:'dd/MM/yyyy'}}</a></td>
                     <td>{{report.amount | number:'2'}} kg</td>
-                    <td ng-repeat-start="spice in report.spices | orderBy:'spiceName'">
+                    <td ng-repeat-start="spice in report.spices | orderBy:'spiceName' track by spice.spiceName">
                         {{spice.recipieAmount | number:'3'}} kg
                     </td>
                     <td>{{spice.usedAmount | number:'3'}} kg</td>
                     <td ng-repeat-end>
-                        <div ng-repeat="usage in spice.usages | orderBy:'serialNumber'">
+                        <div ng-repeat="usage in spice.usages | orderBy:'serialNumber' track by usage.serialNumber">
                             {{usage.spiceAmount | number:'3'}} kg {{usage.serialNumber}}
                         </div>
                     </td>

@@ -15,10 +15,12 @@ public class ProductionRepositoryImpl implements ProductionRepositoryCustom {
 
     public void loadProducts(Production production) {
         Session session = entityManager.unwrap(Session.class);
-        production.getProductionItems().forEach(productionItem -> {
-            Product product = productionItem.getProduct();
-            session.load(product, product.getId());
-        });
+        production.getProductionItems().stream()
+            .filter(productionItem -> productionItem.getId() == null)
+            .forEach(productionItem -> {
+                Product product = productionItem.getProduct();
+                session.load(product, product.getId());
+            });
     }
 
 }

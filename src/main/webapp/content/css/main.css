@@ -341,3 +341,8 @@ my css styles
 label + div[class=btn-group] {
     width: 100%;
 }
+
+.report thead tr th {
+    text-align: center;
+    vertical-align: middle;
+}

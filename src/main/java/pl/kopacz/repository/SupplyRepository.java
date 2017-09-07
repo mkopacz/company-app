@@ -9,6 +9,6 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface SupplyRepository extends JpaRepository<Supply, Long> {
 
-    List<Supply> findBySpiceOrderByIdAsc(Spice spice);
+    List<Supply> findBySpiceAndAmountGreaterThanOrderByIdAsc(Spice spice, Double amount);
 
 }

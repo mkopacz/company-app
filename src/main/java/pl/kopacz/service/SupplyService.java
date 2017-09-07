@@ -70,7 +70,7 @@ public class SupplyService {
             Product product = productionItem.getProduct();
             Double productAmount = productionItem.getAmount();
 
-            for (Ingredient ingredient : productionItem.getProductIngredients()) {
+            for (Ingredient ingredient : product.getIngredients()) {
                 Double spiceAmount = ingredient.getAmount() * productAmount / 100;
                 Double roundedSpiceAmount = RoundUtil.roundToNearest005(spiceAmount);
                 Set<SupplyUsage> supplyUsages = useSupply(product, ingredient.getSpice(), roundedSpiceAmount);
@@ -93,7 +93,7 @@ public class SupplyService {
 
     private Set<SupplyUsage> useSupply(Product product, Spice spice, double amount) throws InsufficientSpiceException {
         Set<SupplyUsage> supplyUsages = new HashSet<>();
-        List<Supply> supplies = supplyRepository.findBySpiceOrderByIdAsc(spice);
+        List<Supply> supplies = supplyRepository.findBySpiceAndAmountGreaterThanOrderByIdAsc(spice, 0d);
 
         try {
             while (amount > 0) {

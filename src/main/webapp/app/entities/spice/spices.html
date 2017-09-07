@@ -25,7 +25,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="spice in vm.spices track by spice.id">
+                <tr ng-repeat="spice in vm.spices | orderBy: 'id' track by spice.id">
                     <td><a ui-sref="spice-detail({id:spice.id})">{{spice.id}}</a></td>
                     <td>{{spice.name}}</td>
                     <td>{{spice.producer}}</td>
