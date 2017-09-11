@@ -1,12 +1,16 @@
 package pl.kopacz.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.lowagie.text.DocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.kopacz.service.ProductService;
+import pl.kopacz.service.ReportService;
 import pl.kopacz.service.dto.ProductDTO;
 import pl.kopacz.service.dto.ProductReportDTO;
 import pl.kopacz.web.rest.util.HeaderUtil;
@@ -29,6 +33,9 @@ public class ProductResource {
 
     @Inject
     private ProductService productService;
+
+    @Inject
+    private ReportService reportService;
 
     /**
      * POST  /products : Create a new product.
@@ -116,12 +123,26 @@ public class ProductResource {
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("product", id.toString())).build();
     }
 
-    @GetMapping("/products/{id}/reports")
     @Timed
+    @GetMapping(value = "/products/{id}/reports", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ProductReportDTO>> getProductReports(@PathVariable Long id) {
         log.debug("REST request to get reports of Product : {}", id);
         List<ProductReportDTO> productReports = productService.buildProductReports(id);
         return new ResponseEntity<>(productReports, HttpStatus.OK);
+    }
+
+    @Timed
+    @GetMapping(value = "/products/{id}/reports", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getProductPdfReports(@PathVariable Long id) throws DocumentException {
+        log.debug("REST request to get pdf reports of Product : {}", id);
+        List<ProductReportDTO> reportData = productService.buildProductReports(id);
+        byte[] productReport = reportService.createProductReport(reportData);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentLength(productReport.length);
+        headers.setContentDispositionFormData("attachment", "report.pdf");
+
+        return new ResponseEntity<>(productReport, headers, HttpStatus.OK);
     }
 
 }

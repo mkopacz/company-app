@@ -43,7 +43,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="report in vm.reports | orderBy:'date' track by report.date">
-                    <td>{{report.date | date:'dd/MM/yyyy'}}</a></td>
+                    <td>{{report.date | date:'dd/MM/yyyy'}}</td>
                     <td>{{report.amount | number:'2'}} kg</td>
                     <td ng-repeat-start="spice in report.spices | orderBy:'spiceName' track by spice.spiceName"
                         class="start">
