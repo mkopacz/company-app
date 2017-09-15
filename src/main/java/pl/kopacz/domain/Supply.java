@@ -3,6 +3,7 @@ package pl.kopacz.domain;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -25,8 +26,8 @@ public class Supply implements Serializable {
     private LocalDate expirationDate;
 
     @NotNull
-    @Column(name = "amount", nullable = false)
-    private Double amount;
+    @Column(name = "amount", precision = 9, scale = 3, nullable = false)
+    private BigDecimal amount;
 
     @NotNull
     @ManyToOne
@@ -66,16 +67,16 @@ public class Supply implements Serializable {
         this.expirationDate = expirationDate;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public Supply amount(Double amount) {
+    public Supply amount(BigDecimal amount) {
         this.amount = amount;
         return this;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -92,12 +93,12 @@ public class Supply implements Serializable {
         this.spice = spice;
     }
 
-    public void decreaseAmount(Double amount) {
-        this.amount -= amount;
+    public void decreaseAmount(BigDecimal amount) {
+        this.amount = this.amount.subtract(amount);
     }
 
-    public void increaseAmount(Double amount) {
-        this.amount += amount;
+    public void increaseAmount(BigDecimal amount) {
+        this.amount = this.amount.add(amount);
     }
 
     @Override

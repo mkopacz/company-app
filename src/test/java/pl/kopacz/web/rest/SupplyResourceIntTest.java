@@ -1,36 +1,35 @@
 package pl.kopacz.web.rest;
 
-import pl.kopacz.CompanyApp;
-
-import pl.kopacz.domain.Supply;
-import pl.kopacz.domain.Spice;
-import pl.kopacz.repository.SupplyRepository;
-import pl.kopacz.service.SupplyService;
-import pl.kopacz.service.dto.SupplyDTO;
-import pl.kopacz.service.mapper.SupplyMapper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import pl.kopacz.CompanyApp;
+import pl.kopacz.domain.Spice;
+import pl.kopacz.domain.Supply;
+import pl.kopacz.repository.SupplyRepository;
+import pl.kopacz.service.SupplyService;
+import pl.kopacz.service.dto.SupplyDTO;
+import pl.kopacz.service.mapper.SupplyMapper;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -49,8 +48,8 @@ public class SupplyResourceIntTest {
     private static final LocalDate DEFAULT_EXPIRATION_DATE = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_EXPIRATION_DATE = LocalDate.now(ZoneId.systemDefault());
 
-    private static final Double DEFAULT_AMOUNT = 1D;
-    private static final Double UPDATED_AMOUNT = 2D;
+    private static final BigDecimal DEFAULT_AMOUNT = BigDecimal.valueOf(1);
+    private static final BigDecimal UPDATED_AMOUNT = BigDecimal.valueOf(2);
 
     @Inject
     private SupplyRepository supplyRepository;
@@ -200,7 +199,7 @@ public class SupplyResourceIntTest {
                 .andExpect(jsonPath("$.[*].items.[*].id").value(hasItem(supply.getId().intValue())))
                 .andExpect(jsonPath("$.[*].items.[*].serialNumber").value(hasItem(DEFAULT_SERIAL_NUMBER.toString())))
                 .andExpect(jsonPath("$.[*].items.[*].expirationDate").value(hasItem(DEFAULT_EXPIRATION_DATE.toString())))
-                .andExpect(jsonPath("$.[*].items.[*].amount").value(hasItem(DEFAULT_AMOUNT.doubleValue())));
+                .andExpect(jsonPath("$.[*].items.[*].amount").value(hasItem(DEFAULT_AMOUNT.intValue())));
     }
 
     @Test
@@ -216,7 +215,7 @@ public class SupplyResourceIntTest {
             .andExpect(jsonPath("$.id").value(supply.getId().intValue()))
             .andExpect(jsonPath("$.serialNumber").value(DEFAULT_SERIAL_NUMBER.toString()))
             .andExpect(jsonPath("$.expirationDate").value(DEFAULT_EXPIRATION_DATE.toString()))
-            .andExpect(jsonPath("$.amount").value(DEFAULT_AMOUNT.doubleValue()));
+            .andExpect(jsonPath("$.amount").value(DEFAULT_AMOUNT.intValue()));
     }
 
     @Test

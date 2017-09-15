@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="mariusz-macbook (generated)" id="1505507344215-1">
+        <modifyDataType
+            columnName="amount"
+            newDataType="numeric(9,3)"
+            schemaName="public"
+            tableName="ingredient"/>
+    </changeSet>
+    <changeSet author="mariusz-macbook (generated)" id="1505507344215-2">
+        <modifyDataType
+            columnName="amount"
+            newDataType="numeric(9,3)"
+            schemaName="public"
+            tableName="supply"/>
+    </changeSet>
+    <changeSet author="mariusz-macbook (generated)" id="1505507344215-3">
+        <modifyDataType
+            columnName="amount"
+            newDataType="numeric(9,3)"
+            schemaName="public"
+            tableName="supply_usage"/>
+    </changeSet>
+    <changeSet author="mariusz-macbook (generated)" id="1505507344215-4">
+        <modifyDataType
+            columnName="amount"
+            newDataType="numeric(10,2)"
+            schemaName="public"
+            tableName="production_item"/>
+    </changeSet>
+</databaseChangeLog>

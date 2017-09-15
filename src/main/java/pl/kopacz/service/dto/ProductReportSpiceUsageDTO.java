@@ -1,17 +1,18 @@
 package pl.kopacz.service.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class ProductReportSpiceUsageDTO implements Serializable {
 
-    private Double spiceAmount;
+    private BigDecimal spiceAmount;
     private String serialNumber;
 
-    public Double getSpiceAmount() {
+    public BigDecimal getSpiceAmount() {
         return spiceAmount;
     }
 
-    public void setSpiceAmount(Double spiceAmount) {
+    public void setSpiceAmount(BigDecimal spiceAmount) {
         this.spiceAmount = spiceAmount;
     }
 

@@ -15,6 +15,7 @@ import pl.kopacz.service.mapper.SupplyMapper;
 import pl.kopacz.service.util.RoundUtil;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -68,11 +69,11 @@ public class SupplyService {
 
         for (ProductionItem productionItem : production.getProductionItems()) {
             Product product = productionItem.getProduct();
-            Double productAmount = productionItem.getAmount();
+            BigDecimal productAmount = productionItem.getAmount();
 
             for (Ingredient ingredient : product.getIngredients()) {
-                Double spiceAmount = ingredient.getAmount() * productAmount / 100;
-                Double roundedSpiceAmount = RoundUtil.roundToNearest005(spiceAmount);
+                BigDecimal spiceAmount = ingredient.getAmount().multiply(productAmount).divide(BigDecimal.valueOf(100));
+                BigDecimal roundedSpiceAmount = RoundUtil.roundToNearest005(spiceAmount);
                 Set<SupplyUsage> supplyUsages = useSupply(product, ingredient.getSpice(), roundedSpiceAmount);
                 totalSupplyUsages.addAll(supplyUsages);
             }
@@ -91,21 +92,23 @@ public class SupplyService {
         supplyUsageRepository.delete(supplyUsages);
     }
 
-    private Set<SupplyUsage> useSupply(Product product, Spice spice, double amount) throws InsufficientSpiceException {
+    private Set<SupplyUsage> useSupply(Product product, Spice spice, BigDecimal amount)
+        throws InsufficientSpiceException {
+
         Set<SupplyUsage> supplyUsages = new HashSet<>();
-        List<Supply> supplies = supplyRepository.findBySpiceAndAmountGreaterThanOrderByIdAsc(spice, 0d);
+        List<Supply> supplies = supplyRepository.findBySpiceAndAmountGreaterThanOrderByIdAsc(spice, BigDecimal.ZERO);
 
         try {
-            while (amount > 0) {
+            while (amount.compareTo(BigDecimal.ZERO) > 0) {
                 Supply supply = supplies.remove(0);
-                double amountToUse = Math.min(supply.getAmount(), amount);
+                BigDecimal amountToUse = supply.getAmount().min(amount);
 
                 SupplyUsage supplyUsage = new SupplyUsage();
                 supplyUsage.amount(amountToUse).supply(supply).product(product);
                 supplyUsages.add(supplyUsage);
 
                 supply.decreaseAmount(amountToUse);
-                amount -= amountToUse;
+                amount = amount.subtract(amountToUse);
             }
         } catch (IndexOutOfBoundsException e) {
             throw new InsufficientSpiceException();

@@ -1,19 +1,15 @@
 package pl.kopacz.service.dto;
 
+import org.hibernate.validator.constraints.Email;
 import pl.kopacz.config.Constants;
-
 import pl.kopacz.domain.Authority;
 import pl.kopacz.domain.User;
 
-import org.hibernate.validator.constraints.Email;
-
-import javax.validation.constraints.*;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * A DTO representing a user, with his authorities.
- */
 public class UserDTO {
 
     @Pattern(regexp = Constants.LOGIN_REGEX)
@@ -47,9 +43,8 @@ public class UserDTO {
                 .collect(Collectors.toSet()));
     }
 
-    public UserDTO(String login, String firstName, String lastName,
-        String email, boolean activated, String langKey, Set<String> authorities) {
-
+    public UserDTO(String login, String firstName, String lastName, String email,
+                   boolean activated, String langKey, Set<String> authorities) {
         this.login = login;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -99,4 +94,5 @@ public class UserDTO {
             ", authorities=" + authorities +
             "}";
     }
+
 }

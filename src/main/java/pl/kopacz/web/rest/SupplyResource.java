@@ -19,6 +19,7 @@ import pl.kopacz.web.rest.util.PaginationUtil;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -36,7 +37,7 @@ import static java.util.stream.Collectors.*;
 public class SupplyResource {
 
     private final Logger log = LoggerFactory.getLogger(SupplyResource.class);
-        
+
     @Inject
     private SupplyService supplyService;
 
@@ -101,7 +102,7 @@ public class SupplyResource {
 
     private List<SupplyGroupDTO> groupSupplies(List<SupplyDTO> supplies) {
         Map<SpiceDTO, Set<SupplyGroupItemDTO>> spicesToSupplies = supplies.stream()
-            .filter(supply -> supply.getAmount() > 0)
+            .filter(supply -> supply.getAmount().compareTo(BigDecimal.ZERO) > 0)
             .collect(groupingBy(SupplyDTO::getSpice, mapping(SupplyGroupItemDTO::fromSupplyDTO, toSet())));
         return spicesToSupplies.entrySet().stream()
             .map(spiceAndSupplies ->

@@ -15,14 +15,12 @@ import pl.kopacz.service.mapper.ProductMapper;
 import pl.kopacz.service.util.RoundUtil;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * Service Implementation for managing Product.
- */
 @Service
 @Transactional
 public class ProductService {
@@ -38,12 +36,6 @@ public class ProductService {
     @Inject
     private ProductMapper productMapper;
 
-    /**
-     * Save a product.
-     *
-     * @param productDTO the entity to save
-     * @return the persisted entity
-     */
     public ProductDTO save(ProductDTO productDTO) {
         log.debug("Request to save Product : {}", productDTO);
         Product product = productMapper.productDTOToProduct(productDTO);
@@ -52,11 +44,6 @@ public class ProductService {
         return result;
     }
 
-    /**
-     *  Get all the products.
-     *
-     *  @return the list of entities
-     */
     @Transactional(readOnly = true)
     public List<ProductDTO> findAll() {
         log.debug("Request to get all Products");
@@ -67,12 +54,6 @@ public class ProductService {
         return result;
     }
 
-    /**
-     *  Get one product by id.
-     *
-     *  @param id the id of the entity
-     *  @return the entity
-     */
     @Transactional(readOnly = true)
     public ProductDTO findOne(Long id) {
         log.debug("Request to get Product : {}", id);
@@ -81,11 +62,6 @@ public class ProductService {
         return productDTO;
     }
 
-    /**
-     *  Delete the  product by id.
-     *
-     *  @param id the id of the entity
-     */
     public void delete(Long id) {
         log.debug("Request to delete Product : {}", id);
         productRepository.delete(id);
@@ -106,7 +82,7 @@ public class ProductService {
     }
 
     private Set<ProductReportSpiceDTO> buildProductReportSpices(ProductionItem productionItem) {
-        Double productionItemAmount = productionItem.getAmount();
+        BigDecimal productionItemAmount = productionItem.getAmount();
         Set<SupplyUsage> supplyUsages = productionItem.getProductionSupplyUsages().stream()
             .filter(supplyUsage -> supplyUsage.getProduct().equals(productionItem.getProduct()))
             .collect(Collectors.toSet());
@@ -116,10 +92,10 @@ public class ProductService {
     }
 
     private ProductReportSpiceDTO buildProductReportSpice(Ingredient ingredient, Set<SupplyUsage> supplyUsages,
-                                                          Double productionItemAmount) {
+                                                          BigDecimal productionItemAmount) {
         ProductReportSpiceDTO productReportSpice = new ProductReportSpiceDTO();
         productReportSpice.setSpiceName(ingredient.getSpiceName());
-        Double recipieAmount = ingredient.getAmount() * productionItemAmount / 100;
+        BigDecimal recipieAmount = ingredient.getAmount().multiply(productionItemAmount).divide(BigDecimal.valueOf(100));
         productReportSpice.setRecipieAmount(RoundUtil.roundToNearest005(recipieAmount));
         productReportSpice.setUsages(buildProductReportSpiceUsages(ingredient.getSpice(), supplyUsages));
         return productReportSpice;
