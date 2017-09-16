@@ -3,6 +3,7 @@ package pl.kopacz.domain;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
@@ -16,8 +17,8 @@ public class SupplyUsage implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "amount", nullable = false)
-    private Double amount;
+    @Column(name = "amount", precision = 9, scale = 3, nullable = false)
+    private BigDecimal amount;
 
     @NotNull
     @ManyToOne
@@ -39,16 +40,16 @@ public class SupplyUsage implements Serializable {
         this.id = id;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public SupplyUsage amount(Double amount) {
+    public SupplyUsage amount(BigDecimal amount) {
         this.amount = amount;
         return this;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

@@ -1,14 +1,15 @@
 package pl.kopacz.service.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
 public class ProductReportSpiceDTO implements Serializable {
 
     private String spiceName;
-    private Double recipieAmount;
-    private Double usedAmount;
+    private BigDecimal recipieAmount;
+    private BigDecimal usedAmount;
     private Set<ProductReportSpiceUsageDTO> usages = new HashSet<>();
 
     public String getSpiceName() {
@@ -19,19 +20,19 @@ public class ProductReportSpiceDTO implements Serializable {
         this.spiceName = spiceName;
     }
 
-    public Double getRecipieAmount() {
+    public BigDecimal getRecipieAmount() {
         return recipieAmount;
     }
 
-    public void setRecipieAmount(Double recipieAmount) {
+    public void setRecipieAmount(BigDecimal recipieAmount) {
         this.recipieAmount = recipieAmount;
     }
 
-    public Double getUsedAmount() {
+    public BigDecimal getUsedAmount() {
         return usedAmount;
     }
 
-    public void setUsedAmount(Double usedAmount) {
+    public void setUsedAmount(BigDecimal usedAmount) {
         this.usedAmount = usedAmount;
     }
 
@@ -42,8 +43,8 @@ public class ProductReportSpiceDTO implements Serializable {
     public void setUsages(Set<ProductReportSpiceUsageDTO> usages) {
         this.usages = usages;
         this.usedAmount = usages.stream()
-            .mapToDouble(ProductReportSpiceUsageDTO::getSpiceAmount)
-            .sum();
+            .map(ProductReportSpiceUsageDTO::getSpiceAmount)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
 }

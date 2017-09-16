@@ -2,6 +2,7 @@ package pl.kopacz.service.dto;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -16,7 +17,7 @@ public class SupplyDTO implements Serializable {
     private LocalDate expirationDate;
 
     @NotNull
-    private Double amount;
+    private BigDecimal amount;
 
     private SpiceDTO spice;
 
@@ -44,11 +45,11 @@ public class SupplyDTO implements Serializable {
         this.expirationDate = expirationDate;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

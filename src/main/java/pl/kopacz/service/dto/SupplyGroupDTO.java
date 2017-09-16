@@ -1,6 +1,7 @@
 package pl.kopacz.service.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -8,9 +9,7 @@ import java.util.Set;
 public class SupplyGroupDTO implements Serializable {
 
     private SpiceDTO spice;
-
-    private Double totalAmount;
-
+    private BigDecimal totalAmount;
     private Set<SupplyGroupItemDTO> items = new HashSet<>();
 
     public SpiceDTO getSpice() {
@@ -21,11 +20,11 @@ public class SupplyGroupDTO implements Serializable {
         this.spice = spice;
     }
 
-    public Double getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(Double totalAmount) {
+    public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
 
@@ -42,8 +41,8 @@ public class SupplyGroupDTO implements Serializable {
         supplyGroup.spice = spiceDTO;
         supplyGroup.items = items;
         supplyGroup.totalAmount = items.stream()
-            .mapToDouble(SupplyGroupItemDTO::getAmount)
-            .sum();
+            .map(SupplyGroupItemDTO::getAmount)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
         return supplyGroup;
     }
 

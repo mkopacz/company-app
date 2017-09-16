@@ -2,13 +2,14 @@ package pl.kopacz.service.dto;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class ProductionItemDTO implements Serializable {
 
     private Long id;
 
     @NotNull
-    private Double amount;
+    private BigDecimal amount;
 
     private ProductDTO product;
 
@@ -22,11 +23,11 @@ public class ProductionItemDTO implements Serializable {
         this.id = id;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
