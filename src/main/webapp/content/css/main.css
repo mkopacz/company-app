@@ -342,7 +342,16 @@ label + div[class=btn-group] {
     width: 100%;
 }
 
-.report thead tr th {
-    text-align: center;
+.report, .report thead > tr > th, .report tbody > tr > td {
     vertical-align: middle;
+    text-align: center;
+    border: 1px solid #000000;
+}
+
+.report thead > tr > th.start, .report tbody > tr > td.start {
+    border-right: 1px solid #DDDDDD;
+}
+
+.report thead > tr > th.start + th, .report tbody > tr > td.start + td {
+    border-right: 1px solid #DDDDDD;
 }

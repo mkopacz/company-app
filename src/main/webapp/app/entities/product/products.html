@@ -30,7 +30,7 @@
                     <td>{{product.name}}</td>
                     <td>
                         <div class="container-fluid">
-                            <div class="row" ng-repeat="ingredient in product.ingredients">
+                            <div class="row" ng-repeat="ingredient in product.ingredients | orderBy: 'id' track by ingredient.id">
                                 <div class="col-xs-3 no-padding">{{ingredient.amount | number:'3'}} kg</div>
                                 <div class="col-xs-9 no-padding">{{ingredient.spice.name}}</div>
                             </div>
