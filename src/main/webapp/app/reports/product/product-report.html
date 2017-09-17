@@ -23,17 +23,17 @@
     <br/>
 
     <div class="table-responsive" style="overflow-x: auto; white-space: nowrap;">
-        <table class="jh-table table report" ng-if="vm.reports.length">
+        <table class="jh-table table report" ng-if="vm.report.productName">
             <thead>
                 <tr>
                     <th rowspan="2">Data</th>
                     <th rowspan="2">Ilość</th>
-                    <th colspan="3" ng-repeat="spice in vm.reports[0].spices | orderBy:'spiceName' track by spice.spiceName">
-                        {{spice.spiceName}}
+                    <th colspan="3" ng-repeat="usedSpice in vm.report.reportItems[0].usedSpices | orderBy:'spiceName' track by usedSpice.spiceName">
+                        {{usedSpice.spiceName}}
                     </th>
                 </tr>
                 <tr>
-                    <th ng-repeat-start="spice in vm.reports[0].spices | orderBy:'spiceName' track by spice.spiceName"
+                    <th ng-repeat-start="usedSpice in vm.report.reportItems[0].usedSpices | orderBy:'spiceName' track by usedSpice.spiceName"
                         class="start">
                         Receptura
                     </th>
@@ -42,17 +42,17 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="report in vm.reports | orderBy:'date' track by report.date">
-                    <td>{{report.date | date:'dd/MM/yyyy'}}</a></td>
-                    <td>{{report.amount | number:'2'}} kg</td>
-                    <td ng-repeat-start="spice in report.spices | orderBy:'spiceName' track by spice.spiceName"
+                <tr ng-repeat="reportItem in vm.report.reportItems | orderBy:'productionDate' track by reportItem.productionDate">
+                    <td>{{reportItem.productionDate | date:'dd/MM/yyyy'}}</td>
+                    <td>{{reportItem.productionAmount | number:'2'}} kg</td>
+                    <td ng-repeat-start="usedSpice in reportItem.usedSpices | orderBy:'spiceName' track by usedSpice.spiceName"
                         class="start">
-                        {{spice.recipieAmount | number:'3'}} kg
+                        {{usedSpice.recipeAmount | number:'3'}} kg
                     </td>
-                    <td>{{spice.usedAmount | number:'3'}} kg</td>
+                    <td>{{usedSpice.usedAmount | number:'3'}} kg</td>
                     <td ng-repeat-end>
-                        <div ng-repeat="usage in spice.usages | orderBy:'serialNumber' track by usage.serialNumber">
-                            {{usage.spiceAmount | number:'3'}} kg {{usage.serialNumber}}
+                        <div ng-repeat="spiceUsage in usedSpice.spiceUsages | orderBy:'serialNumber' track by spiceUsage.serialNumber">
+                            {{spiceUsage.spiceAmount | number:'3'}} kg {{spiceUsage.serialNumber}}
                         </div>
                     </td>
                 </tr>
@@ -60,7 +60,7 @@
         </table>
     </div>
 
-    <div class="container-fluid" ng-if="!vm.reports.length">
+    <div class="container-fluid" ng-if="!vm.report.productName">
         <div class="row">
             <div class="col-md-12" style="text-align: center;">
                 Brak danych
