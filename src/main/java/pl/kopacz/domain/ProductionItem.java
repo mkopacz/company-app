@@ -77,6 +77,10 @@ public class ProductionItem implements Serializable {
         this.production = production;
     }
 
+    public String getProductName() {
+        return product.getName();
+    }
+
     public Set<Ingredient> getProductIngredients() {
         return product.getIngredients();
     }

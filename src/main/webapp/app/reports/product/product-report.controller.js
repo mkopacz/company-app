@@ -11,7 +11,7 @@
         var vm = this;
 
         vm.products = [];
-        vm.reports = [];
+        vm.report = null;
 
         vm.isLoading = false;
         vm.productId = null;
@@ -29,7 +29,7 @@
         function loadReport() {
             vm.isLoading = true;
             ProductReport.get({id : vm.productId}, function(data) {
-                vm.reports = data;
+                vm.report = data;
                 vm.isLoading = false;
             });
         }

@@ -8,10 +8,10 @@
     ProductReport.$inject = ['$resource'];
 
     function ProductReport ($resource) {
-        var resourceUrl =  'api/products/:id/reports';
+        var resourceUrl =  'api/products/:id/report';
 
         return $resource(resourceUrl, {}, {
-            'get': { method: 'GET', isArray: true }
+            'get': { method: 'GET', isArray: false }
         });
     }
 

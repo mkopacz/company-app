@@ -7,10 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.kopacz.domain.*;
 import pl.kopacz.repository.ProductRepository;
 import pl.kopacz.repository.ProductionItemRepository;
-import pl.kopacz.service.dto.ProductDTO;
-import pl.kopacz.service.dto.ProductReportDTO;
-import pl.kopacz.service.dto.ProductReportSpiceDTO;
-import pl.kopacz.service.dto.ProductReportSpiceUsageDTO;
+import pl.kopacz.service.dto.*;
 import pl.kopacz.service.mapper.ProductMapper;
 import pl.kopacz.service.util.RoundUtil;
 
@@ -67,45 +64,48 @@ public class ProductService {
         productRepository.delete(id);
     }
 
-    public List<ProductReportDTO> buildProductReports(Long productId) {
-        return productionItemRepository.findByProductId(productId).stream()
-            .map(this::buildProductReport)
-            .collect(Collectors.toList());
-    }
-
-    private ProductReportDTO buildProductReport(ProductionItem productionItem) {
+    public ProductReportDTO buildProductReport(Long productId) {
         ProductReportDTO productReport = new ProductReportDTO();
-        productReport.setAmount(productionItem.getAmount());
-        productReport.setDate(productionItem.getProductionDate());
-        productReport.setSpices(buildProductReportSpices(productionItem));
+        productionItemRepository.findByProductId(productId).forEach(productionItem -> {
+            productReport.setProductName(productionItem.getProductName());
+            productReport.addReportItem(buildProductReportItem(productionItem));
+        });
         return productReport;
     }
 
-    private Set<ProductReportSpiceDTO> buildProductReportSpices(ProductionItem productionItem) {
+    private ProductReportItemDTO buildProductReportItem(ProductionItem productionItem) {
+        ProductReportItemDTO productReportItem = new ProductReportItemDTO();
+        productReportItem.setProductionAmount(productionItem.getAmount());
+        productReportItem.setProductionDate(productionItem.getProductionDate());
+        productReportItem.setUsedSpices(buildProductReportSpices(productionItem));
+        return productReportItem;
+    }
+
+    private List<ProductReportSpiceDTO> buildProductReportSpices(ProductionItem productionItem) {
         BigDecimal productionItemAmount = productionItem.getAmount();
         Set<SupplyUsage> supplyUsages = productionItem.getProductionSupplyUsages().stream()
             .filter(supplyUsage -> supplyUsage.getProduct().equals(productionItem.getProduct()))
             .collect(Collectors.toSet());
         return productionItem.getProductIngredients().stream()
             .map(ingredient -> buildProductReportSpice(ingredient, supplyUsages, productionItemAmount))
-            .collect(Collectors.toSet());
+            .collect(Collectors.toList());
     }
 
     private ProductReportSpiceDTO buildProductReportSpice(Ingredient ingredient, Set<SupplyUsage> supplyUsages,
                                                           BigDecimal productionItemAmount) {
         ProductReportSpiceDTO productReportSpice = new ProductReportSpiceDTO();
         productReportSpice.setSpiceName(ingredient.getSpiceName());
-        BigDecimal recipieAmount = ingredient.getAmount().multiply(productionItemAmount).divide(BigDecimal.valueOf(100));
-        productReportSpice.setRecipieAmount(RoundUtil.roundToNearest005(recipieAmount));
-        productReportSpice.setUsages(buildProductReportSpiceUsages(ingredient.getSpice(), supplyUsages));
+        BigDecimal recipeAmount = ingredient.getAmount().multiply(productionItemAmount).divide(BigDecimal.valueOf(100));
+        productReportSpice.setRecipeAmount(RoundUtil.roundToNearest005(recipeAmount));
+        productReportSpice.setSpiceUsages(buildProductReportSpiceUsages(ingredient.getSpice(), supplyUsages));
         return productReportSpice;
     }
 
-    private Set<ProductReportSpiceUsageDTO> buildProductReportSpiceUsages(Spice spice, Set<SupplyUsage> supplyUsages) {
+    private List<ProductReportSpiceUsageDTO> buildProductReportSpiceUsages(Spice spice, Set<SupplyUsage> supplyUsages) {
         return supplyUsages.stream()
             .filter(supplyUsage -> supplyUsage.getSupplySpice().equals(spice))
             .map(this::buildProductReportSpiceUsage)
-            .collect(Collectors.toSet());
+            .collect(Collectors.toList());
     }
 
     private ProductReportSpiceUsageDTO buildProductReportSpiceUsage(SupplyUsage supplyUsage) {

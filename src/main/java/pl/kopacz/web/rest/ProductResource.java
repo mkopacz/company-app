@@ -9,14 +9,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.kopacz.service.ProductReportService;
 import pl.kopacz.service.ProductService;
-import pl.kopacz.service.ReportService;
 import pl.kopacz.service.dto.ProductDTO;
 import pl.kopacz.service.dto.ProductReportDTO;
 import pl.kopacz.web.rest.util.HeaderUtil;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -33,9 +34,6 @@ public class ProductResource {
 
     @Inject
     private ProductService productService;
-
-    @Inject
-    private ReportService reportService;
 
     /**
      * POST  /products : Create a new product.
@@ -124,19 +122,20 @@ public class ProductResource {
     }
 
     @Timed
-    @GetMapping(value = "/products/{id}/reports", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ProductReportDTO>> getProductReports(@PathVariable Long id) {
-        log.debug("REST request to get reports of Product : {}", id);
-        List<ProductReportDTO> productReports = productService.buildProductReports(id);
-        return new ResponseEntity<>(productReports, HttpStatus.OK);
+    @GetMapping(value = "/products/{id}/report", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ProductReportDTO> getProductReport(@PathVariable Long id) {
+        log.debug("REST request to get report of Product : {}", id);
+        ProductReportDTO productReport = productService.buildProductReport(id);
+        return new ResponseEntity<>(productReport, HttpStatus.OK);
     }
 
     @Timed
-    @GetMapping(value = "/products/{id}/reports", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> getProductPdfReports(@PathVariable Long id) throws DocumentException {
-        log.debug("REST request to get pdf reports of Product : {}", id);
-        List<ProductReportDTO> reportData = productService.buildProductReports(id);
-        byte[] productReport = reportService.createProductReport(reportData);
+    @GetMapping(value = "/products/{id}/report", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getProductPdfReport(@PathVariable Long id) throws IOException, DocumentException {
+        log.debug("REST request to get pdf report of Product : {}", id);
+        ProductReportDTO reportData = productService.buildProductReport(id);
+        ProductReportService productReportService = new ProductReportService();
+        byte[] productReport = productReportService.createProductReport(reportData);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentLength(productReport.length);

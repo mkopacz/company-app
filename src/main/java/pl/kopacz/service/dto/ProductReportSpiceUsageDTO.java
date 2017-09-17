@@ -3,7 +3,7 @@ package pl.kopacz.service.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class ProductReportSpiceUsageDTO implements Serializable {
+public class ProductReportSpiceUsageDTO implements Comparable<ProductReportSpiceUsageDTO>, Serializable {
 
     private BigDecimal spiceAmount;
     private String serialNumber;
@@ -22,6 +22,11 @@ public class ProductReportSpiceUsageDTO implements Serializable {
 
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
+    }
+
+    @Override
+    public int compareTo(ProductReportSpiceUsageDTO usage) {
+        return this.serialNumber.compareTo(usage.serialNumber);
     }
 
 }
