@@ -14,7 +14,7 @@ import pl.kopacz.service.dto.ProductReportDTO;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -54,7 +54,7 @@ public class ProductReportService {
 
     private Map<String, Object> prepareVariables(ProductReportDTO reportData) {
         Map<String, Object> variables = new HashMap<>();
-        variables.put("date", LocalDate.now());
+        variables.put("date", new Date());
         variables.put("report", reportData);
         return variables;
     }

@@ -13,7 +13,7 @@ public class ProductReportSpiceUsageDTO implements Comparable<ProductReportSpice
     }
 
     public void setSpiceAmount(BigDecimal spiceAmount) {
-        this.spiceAmount = spiceAmount;
+        this.spiceAmount = spiceAmount.setScale(3);
     }
 
     public String getSerialNumber() {

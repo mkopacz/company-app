@@ -1,12 +1,12 @@
 package pl.kopacz.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.time.ZoneId;
+import java.util.*;
 
 public class ProductReportItemDTO implements Iterable<ProductReportItemDTO>,
     Comparable<ProductReportItemDTO>, Serializable {
@@ -28,7 +28,7 @@ public class ProductReportItemDTO implements Iterable<ProductReportItemDTO>,
     }
 
     public void setProductionAmount(BigDecimal productionAmount) {
-        this.productionAmount = productionAmount;
+        this.productionAmount = productionAmount.setScale(2);
     }
 
     public List<ProductReportSpiceDTO> getUsedSpices() {
@@ -41,6 +41,14 @@ public class ProductReportItemDTO implements Iterable<ProductReportItemDTO>,
 
     public String getSpiceName(int index) {
         return usedSpices.get(index).getSpiceName();
+    }
+
+    @JsonIgnore
+    public Date getProductionSimpleDate() {
+        return Date.from(productionDate
+            .atStartOfDay()
+            .atZone(ZoneId.systemDefault())
+            .toInstant());
     }
 
     public void sort() {
