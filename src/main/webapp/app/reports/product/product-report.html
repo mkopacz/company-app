@@ -4,16 +4,20 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-6 no-padding-left">
-                <form name="reportForm" role="form" novalidate ng-submit="vm.loadReport()">
+                <form name="reportForm" role="form" novalidate ng-submit="vm.getReport()">
                     <div class="form-group">
                         <label for="field_product">Wybierz produkt</label>
                         <select class="form-control" id="field_product" ng-model="vm.productId"
                                 ng-options="product.id as product.name for product in vm.products | orderBy:'id'" required>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary"
-                            ng-disabled="reportForm.$invalid || vm.isLoading">
+                    <button type="submit" class="btn btn-primary" ng-disabled="reportForm.$invalid || vm.isLoading"
+                            ng-click="vm.getReport = vm.loadReport">
                         Pokaż raport
+                    </button>
+                    <button type="submit" class="btn btn-success" ng-disabled="reportForm.$invalid || vm.isLoading"
+                            ng-click="vm.getReport = vm.downloadReport">
+                        Pobierz raport
                     </button>
                 </form>
             </div>
