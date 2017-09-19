@@ -26,7 +26,7 @@ public class ProductReportSpiceDTO implements Comparable<ProductReportSpiceDTO>,
     }
 
     public void setRecipeAmount(BigDecimal recipeAmount) {
-        this.recipeAmount = recipeAmount;
+        this.recipeAmount = recipeAmount.setScale(3);
     }
 
     public BigDecimal getUsedAmount() {
@@ -34,7 +34,7 @@ public class ProductReportSpiceDTO implements Comparable<ProductReportSpiceDTO>,
     }
 
     public void setUsedAmount(BigDecimal usedAmount) {
-        this.usedAmount = usedAmount;
+        this.usedAmount = usedAmount.setScale(3);
     }
 
     public List<ProductReportSpiceUsageDTO> getSpiceUsages() {
@@ -43,9 +43,10 @@ public class ProductReportSpiceDTO implements Comparable<ProductReportSpiceDTO>,
 
     public void setSpiceUsages(List<ProductReportSpiceUsageDTO> spiceUsages) {
         this.spiceUsages = spiceUsages;
-        this.usedAmount = spiceUsages.stream()
+        BigDecimal used = spiceUsages.stream()
             .map(ProductReportSpiceUsageDTO::getSpiceAmount)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
+        this.setUsedAmount(used);
     }
 
     public void sort() {
