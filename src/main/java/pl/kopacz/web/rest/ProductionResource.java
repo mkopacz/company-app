@@ -41,7 +41,7 @@ public class ProductionResource {
     @PostMapping("/productions")
     @Timed
     public ResponseEntity<ProductionDTO> createProduction(@Valid @RequestBody ProductionDTO productionDTO)
-        throws URISyntaxException, InsufficientSpiceException {
+        throws URISyntaxException {
 
         log.debug("REST request to save Production : {}", productionDTO);
         if (productionDTO.getId() != null) {
@@ -65,7 +65,7 @@ public class ProductionResource {
     @PutMapping("/productions")
     @Timed
     public ResponseEntity<ProductionDTO> updateProduction(@Valid @RequestBody ProductionDTO productionDTO)
-        throws URISyntaxException, InsufficientSpiceException {
+        throws URISyntaxException {
 
         log.debug("REST request to update Production : {}", productionDTO);
         if (productionDTO.getId() == null) {
@@ -101,9 +101,7 @@ public class ProductionResource {
         log.debug("REST request to get Production : {}", id);
         ProductionDTO productionDTO = productionService.findOne(id);
         return Optional.ofNullable(productionDTO)
-            .map(result -> new ResponseEntity<>(
-                result,
-                HttpStatus.OK))
+            .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
@@ -122,10 +120,10 @@ public class ProductionResource {
     }
 
     @ExceptionHandler(InsufficientSpiceException.class)
-    private ResponseEntity<String> handleInsufficientSpiceException() {
+    private ResponseEntity<String> handleInsufficientSpiceException(InsufficientSpiceException ex) {
         return ResponseEntity.badRequest()
             .contentType(MediaType.TEXT_PLAIN)
-            .body("Brak przypraw dla tej produkcji.");
+            .body("Brak przyprawy: " + ex.getSpiceName() + " dla produktu: " + ex.getProductName() + ".");
     }
 
 }
