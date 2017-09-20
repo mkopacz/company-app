@@ -63,7 +63,7 @@ public class SupplyService {
         supplyRepository.delete(id);
     }
 
-    public Set<SupplyUsage> useSupplies(Production production) throws InsufficientSpiceException {
+    public Set<SupplyUsage> useSupplies(Production production) {
         log.debug("Request to use Supplies : {}", production);
         Set<SupplyUsage> totalSupplyUsages = new HashSet<>();
 
@@ -92,8 +92,7 @@ public class SupplyService {
         supplyUsageRepository.delete(supplyUsages);
     }
 
-    private Set<SupplyUsage> useSupply(Product product, Spice spice, BigDecimal amount)
-        throws InsufficientSpiceException {
+    private Set<SupplyUsage> useSupply(Product product, Spice spice, BigDecimal amount) {
 
         Set<SupplyUsage> supplyUsages = new HashSet<>();
         List<Supply> supplies = supplyRepository.findBySpiceAndAmountGreaterThanOrderByIdAsc(spice, BigDecimal.ZERO);
@@ -111,7 +110,7 @@ public class SupplyService {
                 amount = amount.subtract(amountToUse);
             }
         } catch (IndexOutOfBoundsException e) {
-            throw new InsufficientSpiceException();
+            throw new InsufficientSpiceException(product.getName(), spice.getName());
         }
 
         return supplyUsages;
