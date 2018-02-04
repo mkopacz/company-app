@@ -20,6 +20,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -123,17 +124,21 @@ public class ProductResource {
 
     @Timed
     @GetMapping(value = "/products/{id}/report", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProductReportDTO> getProductReport(@PathVariable Long id) {
+    public ResponseEntity<ProductReportDTO> getProductReport(@PathVariable Long id, @RequestParam LocalDate from,
+                                                             @RequestParam LocalDate to) {
+
         log.debug("REST request to get report of Product : {}", id);
-        ProductReportDTO productReport = productService.buildProductReport(id);
+        ProductReportDTO productReport = productService.buildProductReport(id, from, to);
         return new ResponseEntity<>(productReport, HttpStatus.OK);
     }
 
     @Timed
     @GetMapping(value = "/products/{id}/report", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> getProductPdfReport(@PathVariable Long id) throws IOException, DocumentException {
+    public ResponseEntity<byte[]> getProductPdfReport(@PathVariable Long id, @RequestParam LocalDate from,
+                                                      @RequestParam LocalDate to) throws IOException, DocumentException {
+
         log.debug("REST request to get pdf report of Product : {}", id);
-        ProductReportDTO reportData = productService.buildProductReport(id);
+        ProductReportDTO reportData = productService.buildProductReport(id, from, to);
         ProductReportService productReportService = new ProductReportService();
         byte[] productReport = productReportService.createProductReport(reportData);
 

@@ -1,28 +1,51 @@
 <div>
     <h2>Raporty</h2>
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-xs-6 no-padding-left">
-                <form name="reportForm" role="form" novalidate ng-submit="vm.getReport()">
-                    <div class="form-group">
-                        <label for="field_product">Wybierz produkt</label>
-                        <select class="form-control" id="field_product" ng-model="vm.productId"
-                                ng-options="product.id as product.name for product in vm.products | orderBy:'id'" required>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary" ng-disabled="reportForm.$invalid || vm.isLoading"
-                            ng-click="vm.getReport = vm.loadReport">
-                        Pokaż raport
-                    </button>
-                    <button type="submit" class="btn btn-success" ng-disabled="reportForm.$invalid || vm.isLoading"
-                            ng-click="vm.getReport = vm.downloadReport">
-                        Pobierz raport
-                    </button>
-                </form>
+    <form name="reportForm" role="form" novalidate ng-submit="vm.getReport()">
+        <div class="form-row">
+            <div class="form-group col-md-6 no-padding-left">
+                <label for="field_product">Wybierz produkt</label>
+                <select class="form-control" id="field_product" ng-model="vm.reportReq.productId"
+                        ng-options="product.id as product.name for product in vm.products | orderBy:'id'" required>
+                </select>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label for="field_from">Data od</label>
+                <div class="input-group">
+                    <input id="field_from" type="text" class="form-control" uib-datepicker-popup="{{dateformat}}"
+                           ng-model="vm.reportReq.from" is-open="vm.datePickerOpenStatus.from" required/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('from')">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label for="field_to">Data do</label>
+                <div class="input-group">
+                    <input id="field_to" type="text" class="form-control" uib-datepicker-popup="{{dateformat}}"
+                           ng-model="vm.reportReq.to" is-open="vm.datePickerOpenStatus.to" required/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('to')">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                    </span>
+                </div>
             </div>
         </div>
-    </div>
+
+        <button type="submit" class="btn btn-primary" ng-disabled="reportForm.$invalid || vm.isLoading"
+                ng-click="vm.getReport = vm.loadReport">
+            Pokaż raport
+        </button>
+        <button type="submit" class="btn btn-success" ng-disabled="reportForm.$invalid || vm.isLoading"
+                ng-click="vm.getReport = vm.downloadReport">
+            Pobierz raport
+        </button>
+    </form>
 
     <br/>
 
