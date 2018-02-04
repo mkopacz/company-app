@@ -5,20 +5,23 @@
         .module('companyApp')
         .controller('ProductReportController', ProductReportController);
 
-    ProductReportController.$inject = ['Product', 'ProductReport', '$http', 'FileSaver', 'Blob'];
+    ProductReportController.$inject = ['Product', 'ProductReport', '$http', 'FileSaver', 'Blob', 'DateUtils'];
 
-    function ProductReportController (Product, ProductReport, $http, FileSaver, Blob) {
+    function ProductReportController (Product, ProductReport, $http, FileSaver, Blob, DateUtils) {
         var vm = this;
 
         vm.products = [];
         vm.report = null;
 
         vm.isLoading = false;
-        vm.productId = null;
+        vm.reportReq = {};
 
         vm.getReport = loadReport;
         vm.downloadReport = downloadReport;
         vm.loadReport = loadReport;
+
+        vm.datePickerOpenStatus = {};
+        vm.openCalendar = openCalendar;
 
         loadProducts();
 
@@ -30,7 +33,11 @@
 
         function loadReport() {
             vm.isLoading = true;
-            ProductReport.get({id : vm.productId}, function(data) {
+            ProductReport.get({
+                id : vm.reportReq.productId,
+                from: DateUtils.convertLocalDateToServer(vm.reportReq.from),
+                to: DateUtils.convertLocalDateToServer(vm.reportReq.to)
+            }, function(data) {
                 vm.report = data;
                 vm.isLoading = false;
             });
@@ -38,7 +45,7 @@
 
         function downloadReport() {
             vm.isLoading = true;
-            download(vm.productId, function(data) {
+            download(vm.reportReq, function(data) {
                 var blob = new Blob([data], {
                     type: 'application/pdf'
                 });
@@ -47,13 +54,21 @@
             });
         }
 
-        function download(productId, callback) {
-            $http.get('api/products/' + productId + '/report', {
+        function download(reportReq, callback) {
+            $http.get('api/products/' + reportReq.productId + '/report', {
                 headers: { accept: 'application/pdf' },
-                responseType: 'arraybuffer'
+                responseType: 'arraybuffer',
+                params: {
+                    from: DateUtils.convertLocalDateToServer(reportReq.from),
+                    to: DateUtils.convertLocalDateToServer(reportReq.to)
+                }
             }).then(function(response) {
                 callback(response.data);
             });
+        }
+
+        function openCalendar(date) {
+            vm.datePickerOpenStatus[date] = true;
         }
     }
 

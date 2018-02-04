@@ -13,6 +13,7 @@ import pl.kopacz.service.util.RoundUtil;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -64,12 +65,13 @@ public class ProductService {
         productRepository.delete(id);
     }
 
-    public ProductReportDTO buildProductReport(Long productId) {
+    public ProductReportDTO buildProductReport(Long productId, LocalDate from, LocalDate to) {
         ProductReportDTO productReport = new ProductReportDTO();
-        productionItemRepository.findByProductId(productId).forEach(productionItem -> {
-            productReport.setProductName(productionItem.getProductName());
-            productReport.addReportItem(buildProductReportItem(productionItem));
-        });
+        productionItemRepository.findByProductIdAndProduction_DateBetween(productId, from, to)
+            .forEach(productionItem -> {
+                productReport.setProductName(productionItem.getProductName());
+                productReport.addReportItem(buildProductReportItem(productionItem));
+            });
         return productReport;
     }
 
